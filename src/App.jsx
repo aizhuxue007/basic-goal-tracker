@@ -1,17 +1,16 @@
-import { useState, useRef, useEffect } from "react";
-import Goals from "./components/Goals";
-import Button from "./components/Button";
+/* prettier-ignore */
+import React, {useState} from "react"
 import Modal from "react-modal";
-import Pomodoro from "./components/Pomodoro";
-
+import GridLayout from "./components/GridLayout";
+import Pomodoro from "./components/Pomodoro"
 import "./css/App.css";
-import 'react-clock/dist/Clock.css';
+
 
 function App() {
-  let task = "Go exercise for 20 minutes";
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false)
+  const [task, setTask] = useState('')
 
-  const customStyles = {
+  const customModalStyles = {
     overlay: {
       position: "fixed",
       top: 0,
@@ -27,45 +26,38 @@ function App() {
       right: "auto",
       bottom: "auto",
       border: "none",
-      width: "75%",
-      height: "75%",
+      width: "75vw",
+      height: "75vh",
       padding: "0",
       transform: "translate(-50%, -50%)",
     },
   };
 
-  Modal.setAppElement("#root");
-  const showModal = () => {
-    setIsOpenModal(true);
-  };
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
+  const showModal = (name) => {
+    setTask(name)
+    setIsOpenModal(true)
   }
 
-  function closeModal() {
-    setIsOpenModal(false);
+  const closeModal = () => {
+    setIsOpenModal(false)
   }
+
   return (
     <>
-      <Goals />
-      <div className="flex justify-center">
-        <Button
-          className="rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-400"
-          content={`Start Working`}
-          onClick={showModal}
-        />
-      </div>
+      <GridLayout showModal={showModal}/>
+
       <Modal
         isOpen={isOpenModal}
         onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Example Modal"
+        style={customModalStyles}
+        contentLabel="Pomodoro Modal"
+        ariaHideApp={false}
       >
         <Pomodoro task={task} closeModal={closeModal} />
       </Modal>
-
+      
     </>
-  )
+  );
 }
 
 export default App;

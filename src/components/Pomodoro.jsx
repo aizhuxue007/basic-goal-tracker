@@ -2,20 +2,8 @@ import React from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 const Pomodoro = ({ closeModal, task }) => {
-  //   const [duration, setDuration] = useState(25 * 60);
-  //   useEffect(() => {
-  //     const interval = setInterval(() => {
-  //       setDuration((prevTime) => {
-  //         prevTime - 1;
-  //       });
-  //     }, 1000);
-
-  //     return () => {
-  //       clearInterval(interval);
-  //     };
-  //   });
-  let duration = 25 * 60;
-
+  let duration = 25 * 60,
+    testDuration = 25
   const renderTime = ({ remainingTime }) => {
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;
@@ -44,8 +32,8 @@ const Pomodoro = ({ closeModal, task }) => {
         <div className="mt-10 flex w-full justify-center">
           <CountdownCircleTimer
             isPlaying
-            duration={duration}
-            initialRemainingTime={duration}
+            duration={testDuration}
+            initialRemainingTime={testDuration}
             colors={["#49be25", "#FFFFFF"]}
             size={400}
           >
