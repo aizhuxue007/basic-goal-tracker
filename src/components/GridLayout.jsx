@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import GridItem from ".//GridItem";
 import Todos from "./Todos";
 import "react-clock/dist/Clock.css";
+import RenderAreaChart from "./RenderAreaChart";
 
 const GridLayout = ({showModal}) => {
     let goals = [
@@ -86,8 +87,8 @@ const GridLayout = ({showModal}) => {
         className="grid w-full grid-cols-4 justify-items-stretch gap-1 p-1"
         style={{ height: "100dvh" }}
       >
-        <GridItem title={'2 Year Goal'} input={goals[0].Input}>
-          <FontAwesomeIcon icon={faBullseye} className="pl-2"/>
+        <GridItem title={'2 Year Goal'} input={goals[0].input} font={true} >
+          
         </GridItem>
         <div className="grid-item-2 col-span-2 row-span-4 p-2">
           <div className="item-container h-full w-full rounded-3xl">
@@ -123,7 +124,12 @@ const GridLayout = ({showModal}) => {
         
         <GridItem title={'Yearly Goal'} input={goals[1].input}/>
         <GridItem title={'Stats'} gridProps={'row-start-2 row-span-3'}>
-          {/* <RenderLineChart /> */}
+          <RenderAreaChart />
+          <RenderAreaChart />
+          <RenderAreaChart />
+          <RenderAreaChart />
+          <RenderAreaChart />
+          <RenderAreaChart />
         </GridItem>
         <GridItem title={'Monthly Goal'} input={goals[2].input}/>
         <GridItem title={'Weekly Goal'} input={goals[3].input}/>
