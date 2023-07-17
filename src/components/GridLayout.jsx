@@ -8,6 +8,7 @@ import RenderAreaCharts from "./RenderAreaCharts";
 
 const GridLayout = ({ showModal }) => {
   const hTagRefs = useRef([]);
+  const [mainInput, setMainInput] = useState("");
 
   const [todos, setTodos] = useState([]);
   const [goals, setGoals] = useState([
@@ -98,6 +99,8 @@ const GridLayout = ({ showModal }) => {
             <GridItem
               key={index}
               goal={goal}
+              mainInput={mainInput}
+              setMainInput={setMainInput}
               hTagRef={(ref) => (hTagRefs.current[index] = ref)}
             />
           </>
@@ -115,6 +118,8 @@ const GridLayout = ({ showModal }) => {
                 setTodos={setTodos}
                 goals={goals}
                 setGoals={setGoals}
+                mainInput={mainInput}
+                setMainInput={setMainInput}
               />
 
               <Todos

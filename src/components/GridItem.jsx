@@ -3,7 +3,7 @@ import { faBullseye, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const GridItem = ({ key, goal, hTagRef, gridProps, children }) => {
+const GridItem = ({ key, goal, hTagRef, gridProps, children, mainInput, setMainInput }) => {
   const [isChecked, setIsChecked] = useState(false);
 
   let gridClasses = `grid-item p-2 ${gridProps}`;
@@ -21,7 +21,7 @@ const GridItem = ({ key, goal, hTagRef, gridProps, children }) => {
 
   const editGoal = () => {
     // set mainInput question to goal.time
-    
+    setMainInput("")
     // uncheck isChecked
     toggleIsChecked()
   }

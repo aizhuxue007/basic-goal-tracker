@@ -1,10 +1,10 @@
 import { React, useState, useRef, useEffect } from "react";
 
-const MainInput = ({ todos, setTodos, goals, setGoals }) => {
+const MainInput = ({ todos, setTodos, goals, setGoals, mainInput, setMainInput }) => {
   const todoInput = useRef(null);
 
   const [displayText, setDisplayText] = useState("");
-  const [mainInput, setMainInput] = useState("");
+  
   const [promptIndex, setPromptIndex] = useState(0);
 
   useEffect(() => {
@@ -43,6 +43,10 @@ const MainInput = ({ todos, setTodos, goals, setGoals }) => {
     }
     console.log(promptIndex)
   };
+
+  const askEditPromptFromGridItem = (question) => {
+    setMainInput('hello from griditem')
+  }
 
   const nextQuestionForDisplayInput = () => {
     setDisplayText(prompts[promptIndex]);
