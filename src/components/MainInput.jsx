@@ -1,6 +1,6 @@
 import { React, useState, useRef, useEffect } from "react";
 
-const MainInput = ({ prompts, todos, setTodos }) => {
+const MainInput = ({ todos, setTodos, goals, setGoals }) => {
   const todoInput = useRef(null);
 
   const [displayText, setDisplayText] = useState("");
@@ -15,16 +15,30 @@ const MainInput = ({ prompts, todos, setTodos }) => {
     setDisplayText(prompts[promptIndex]);
   }, [promptIndex]);
 
+  // Variables
+  const prompts = goals.map((goal) => goal.question);
+
   const handleEnterKeyPressed = (event) => {
     if (event.keyCode === 13) {
       if (mainInput.trim() !== "") {
-        addNewTodo();
         resetMainInput();
+        setGoals((prevGoals) => {
+          const updatedGoals = [...prevGoals];
+          updatedGoals[promptIndex].input = mainInput;
+          return updatedGoals;
+        });
       }
-      setPromptIndex((prevPromptIndex) =>
-        prevPromptIndex < prompts.length - 1 ? prevPromptIndex + 1 : 0
-      );
-      nextQuestionForDisplayInput();
+      if (promptIndex < prompts.length) {
+        // For two-year, one-year, monthly, weekly and daily goals
+        setPromptIndex((prevPromptIndex) =>
+          prevPromptIndex < prompts.length - 1 ? prevPromptIndex + 1 : 0
+        );
+        nextQuestionForDisplayInput();
+      }
+      if (promptIndex === 5) {
+        // Last question
+        addNewTodo();
+      }
     }
   };
 

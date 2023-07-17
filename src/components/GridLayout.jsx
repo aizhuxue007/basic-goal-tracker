@@ -10,57 +10,63 @@ const GridLayout = ({ showModal }) => {
   const hTagRefs = useRef([])
 
   const [todos, setTodos] = useState([]);
+  const [goals, setGoals] = useState(
+    [
+      {
+        time: "Two-Year Goal",
+        question: "What's the one thing I want to accomplish in two years?",
+        input: "I want to be making $100,000 a year as a full-time AWS DevOps.",
+        font: true
+      },
+      {
+        time: "One-Year Goal",
+        question:
+          "Based on my Two Year Goal, what's the one thing I can do this year?",
+        input: "Secure a web developer role to learn and gain experience.",
+        font: false
+  
+      },
+      {
+        time: "Monthly Goal",
+        question:
+          "Based on my One Year Goal, what's the one thing I can do this month?",
+        input:
+          "Complete HTML/CSS, Practical Javascript and Git Like a Pro Courses.",
+          font: false
+      },
+      {
+        time: "Weekly Goal",
+        question:
+          "Based on my Monthly Goal, what's the one thing I can do this week?",
+        input: "Finish HTML/CSS course and start Practical Javascript Course",
+        font: false
+      },
+      {
+        time: "Daily Goal",
+        question: "Based on my Weekly Goal, what's the one thing I can do today?",
+        input: "Complete 50% of the HTML/CSS course.",
+        font: false
+      },
+      {
+        time: "Right Now",
+        question:
+          "Based on my Daily Goal, what's the one thing I can do right now?",
+        input: "Continue on the CSS course and code along.",
+        font: false
+      },
+    ]
+  )
 
   useEffect(() => {
     // Try to understand code!
-    hTagRefs.current = hTagRefs.current.slice(0, goalsToRender.length);
-    console.log(hTagRefs)
+    hTagRefs.current.forEach((ref, index) => {
+      if (ref && ref.current) {
+        ref.current.textContent = goals[index].input
+      }
+    })
   }, [])
 
-  let goals = [
-    {
-      time: "Two-Year Goal",
-      question: "What's the one thing I want to accomplish in two years?",
-      input: "I want to be making $100,000 a year as a full-time AWS DevOps.",
-      font: true
-    },
-    {
-      time: "One-Year Goal",
-      question:
-        "Based on my Two Year Goal, what's the one thing I can do this year?",
-      input: "Secure a web developer role to learn and gain experience.",
-      font: false
 
-    },
-    {
-      time: "Monthly Goal",
-      question:
-        "Based on my One Year Goal, what's the one thing I can do this month?",
-      input:
-        "Complete HTML/CSS, Practical Javascript and Git Like a Pro Courses.",
-        font: false
-    },
-    {
-      time: "Weekly Goal",
-      question:
-        "Based on my Monthly Goal, what's the one thing I can do this week?",
-      input: "Finish HTML/CSS course and start Practical Javascript Course",
-      font: false
-    },
-    {
-      time: "Daily Goal",
-      question: "Based on my Weekly Goal, what's the one thing I can do today?",
-      input: "Complete 50% of the HTML/CSS course.",
-      font: false
-    },
-    {
-      time: "Right Now",
-      question:
-        "Based on my Daily Goal, what's the one thing I can do right now?",
-      input: "Continue on the CSS course and code along.",
-      font: false
-    },
-  ];
   let goalsToRender = goals.slice(0, -1)
   
 
@@ -103,9 +109,10 @@ const GridLayout = ({ showModal }) => {
 
               <div className="my-6">
                 <MainInput
-                  prompts={goals.map(goal => goal.question)}
                   todos={todos}
                   setTodos={setTodos}
+                  goals={goals}
+                  setGoals={setGoals}
                 />
 
                 <Todos
