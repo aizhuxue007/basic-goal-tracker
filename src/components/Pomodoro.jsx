@@ -1,7 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Pomodoro = ({ closeModal, task }) => {
+  // Pomodoro is a studying technique that consists of 25 minutes of work followed by 5 minute rest, after 4 sets of work periods, there is a 15 minute long rest.
+
+  library.add(faCircleCheck);
+
   let duration = 25 * 60,
     testBreakDuration = 3,
     testLongBreakDuration = 4,
@@ -14,36 +21,77 @@ const Pomodoro = ({ closeModal, task }) => {
   const [pomodoroCount, setPomodoroCount] = useState(1);
 
   const renderTime = ({ remainingTime }) => {
-    const minutes = Math.floor(remainingTime / 60);
-    const seconds = remainingTime % 60;
     return (
       <div className="time-wrapper">
-        <div className="time text-4xl">{`${minutes
-          .toString()
-          .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`}</div>
+        <div className="time text-4xl">{`${formatRenderTimeMinutes(
+          remainingTime
+        )}:${formatRenderTimeSeconds(remainingTime)}`}</div>
       </div>
     );
   };
 
-  const setToPomodoro = () => {
-    setIsLongBreak(false)
-    setIsBreak(false)
-    setIsPomodoro(true)
+  const renderCheckPomodoro = () => {
+    return (
+      <>
+        {isPomodoro && (
+          <h1 className="text-center text-5xl font-bold">{task} 💪</h1>
+        )}
+      </>
+    );
   };
-  // const updatePomodoroCount = 
-  const chooseWhichBreak = async () => {
-    setIsPomodoro(false);
+
+  const renderCheckShortBreak = () => {
+    return (
+      <>
+        {isBreak && (
+          <h1 className="text-center text-5xl font-bold">
+            Short 5 Minute Break
+          </h1>
+        )}
+      </>
+    );
+  };
+
+  const renderCheckLongBreak = () => {
+    return (
+      <>
+        {isLongBreak && (
+          <h1 className="text-center text-5xl font-bold">
+            Long 15 Minute Break
+          </h1>
+        )}
+      </>
+    );
+  };
+
+  const formatRenderTimeMinutes = (timeForFormat) => {
+    const minutes = Math.floor(timeForFormat / 60);
+    return minutes.toString().padStart(2, "0");
+  };
+
+  const formatRenderTimeSeconds = (timeForFormat) => {
+    const seconds = timeForFormat % 60;
+    return seconds.toString().padStart(2, "0");
+  };
+
+  const setToPomodoro = () => {
+    setIsLongBreak(false);
+    setIsBreak(false);
+    setIsPomodoro(true);
+  };
+
+  const incrementPomodoroCount = () => {
     setPomodoroCount((prevCount) => {
       const newCount = prevCount + 1;
-      console.log(`pomodoroCount: ${pomodoroCount} pomodoroCount%4: ${pomodoroCount%4===0}`)
-      return newCount
+      return newCount;
     });
-    if (pomodoroCount%4 === 0) {
-      setIsLongBreak(true)
-    } else {
-      setIsBreak(true)
-    }
-  }
+  };
+
+  const chooseWhichBreak = async () => {
+    setIsPomodoro(false);
+    incrementPomodoroCount();
+    pomodoroCount % 4 === 0 ? setIsLongBreak(true) : setIsBreak(true);
+  };
 
   const pausePomodoro = (playingBool) => {
     setIsPlaying(playingBool);
@@ -65,15 +113,11 @@ const Pomodoro = ({ closeModal, task }) => {
             />
           </button>
         </div>
-        {isPomodoro && (
-          <h1 className="text-center text-5xl font-bold">{task} 💪</h1>
-        )}
-        {isLongBreak && (
-          <h1 className="text-center text-5xl font-bold">15 Minute Break</h1>
-        )}
-        {isBreak && (
-          <h1 className="text-center text-5xl font-bold">5 Minute Break</h1>
-        )}
+
+        {renderCheckPomodoro()}
+        {renderCheckShortBreak()}
+        {renderCheckLongBreak()}
+
         <div className="mt-10 flex w-full justify-center">
           {isPomodoro && (
             <CountdownCircleTimer
@@ -111,7 +155,7 @@ const Pomodoro = ({ closeModal, task }) => {
                 colors={["#49be25", "#FFFFFF"]}
                 size={400}
                 onComplete={() => {
-                  setToPomodoro()
+                  setToPomodoro();
                 }}
               >
                 {renderTime}
@@ -119,7 +163,10 @@ const Pomodoro = ({ closeModal, task }) => {
             </>
           )}
         </div>
-        <h1 className="text-center text-xl my-10">{`Pomodoros: ${pomodoroCount}`}</h1>
+        <h1 className="text-center text-xl text-green-300 my-10">
+          <FontAwesomeIcon icon={faCircleCheck} className="pl-2 mr-3" />
+          {`${pomodoroCount}`}
+        </h1>
 
         <div className="mt-10 flex justify-center space-x-10">
           {isPlaying ? (
