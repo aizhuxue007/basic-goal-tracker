@@ -9,6 +9,7 @@ import "./css/App.css";
 function App() {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [task, setTask] = useState('')
+  const [ pomodoroCount, setPomodoroCount ] = useState(0)
 
   const customModalStyles = {
     overlay: {
@@ -45,7 +46,7 @@ function App() {
   return (
     <>
       <GridLayout showModal={showModal}/>
-
+      <h1 className="text-center text-xl mb-10">{`Pomodoros: ${pomodoroCount}`}</h1>
       <Modal
         isOpen={isOpenModal}
         onRequestClose={closeModal}
@@ -53,7 +54,7 @@ function App() {
         contentLabel="Pomodoro Modal"
         ariaHideApp={false}
       >
-        <Pomodoro task={task} closeModal={closeModal} />
+        <Pomodoro task={task} closeModal={closeModal} count={pomodoroCount} setCount={setPomodoroCount}/>
       </Modal>
       
     </>

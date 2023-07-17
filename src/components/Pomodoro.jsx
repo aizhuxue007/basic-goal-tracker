@@ -1,13 +1,17 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 const Pomodoro = ({ closeModal, task }) => {
-  const [ isPlaying, setIsPlaying ] = useState(true)
-  const [ isPomodoro, setIsPomodoro ] = useState(true)
-  const [ pomodoroCount, setPomodoroCount ] = useState(0)
-  
   let duration = 25 * 60,
-    testDuration = 25
+    testBreakDuration = 3,
+    testLongBreakDuration = 4,
+    testPomodoroDuration = 5;
+
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPomodoro, setIsPomodoro] = useState(true);
+  const [isBreak, setIsBreak] = useState(false);
+  const [isLongBreak, setIsLongBreak] = useState(false);
+  const [pomodoroCount, setPomodoroCount] = useState(1);
 
   const renderTime = ({ remainingTime }) => {
     const minutes = Math.floor(remainingTime / 60);
@@ -20,12 +24,35 @@ const Pomodoro = ({ closeModal, task }) => {
       </div>
     );
   };
+
+  const setToPomodoro = () => {
+    setIsLongBreak(false)
+    setIsBreak(false)
+    setIsPomodoro(true)
+  };
+  // const updatePomodoroCount = 
+  const chooseWhichBreak = async () => {
+    setIsPomodoro(false);
+    setPomodoroCount((prevCount) => {
+      const newCount = prevCount + 1;
+      console.log(`pomodoroCount: ${pomodoroCount} pomodoroCount%4: ${pomodoroCount%4===0}`)
+      return newCount
+    });
+    if (pomodoroCount%4 === 0) {
+      setIsLongBreak(true)
+    } else {
+      setIsBreak(true)
+    }
+  }
+
   const pausePomodoro = (playingBool) => {
     setIsPlaying(playingBool);
-  }
+  };
+
   const stopPomodoro = () => {
-    setIsPomodoro(false)
-  }
+    setIsPomodoro(false);
+  };
+
   return (
     <>
       <div className="h-full min-h-max  w-full flex-col rounded-2xl bg-green-700 p-3 text-white">
@@ -38,26 +65,81 @@ const Pomodoro = ({ closeModal, task }) => {
             />
           </button>
         </div>
-        <h1 className="text-center text-5xl font-bold">{task}</h1>
+        {isPomodoro && (
+          <h1 className="text-center text-5xl font-bold">{task} 💪</h1>
+        )}
+        {isLongBreak && (
+          <h1 className="text-center text-5xl font-bold">15 Minute Break</h1>
+        )}
+        {isBreak && (
+          <h1 className="text-center text-5xl font-bold">5 Minute Break</h1>
+        )}
         <div className="mt-10 flex w-full justify-center">
-          
-          {isPomodoro ? <CountdownCircleTimer
-            isPlaying={isPlaying}
-            duration={testDuration}
-            initialRemainingTime={testDuration}
-            colors={["#49be25", "#FFFFFF"]}
-            size={400}
-          >
-            {renderTime}
-          </CountdownCircleTimer> : <h1>Good job! Pomodoro complete!</h1>}
+          {isPomodoro && (
+            <CountdownCircleTimer
+              isPlaying={isPlaying}
+              duration={testPomodoroDuration}
+              colors={["#49be25", "#FFFFFF"]}
+              size={400}
+              onComplete={() => {
+                chooseWhichBreak();
+              }}
+            >
+              {renderTime}
+            </CountdownCircleTimer>
+          )}
+          {isBreak && (
+            <>
+              <CountdownCircleTimer
+                isPlaying={isPlaying}
+                duration={testBreakDuration}
+                colors={["#49be25", "#FFFFFF"]}
+                size={400}
+                onComplete={() => {
+                  setToPomodoro();
+                }}
+              >
+                {renderTime}
+              </CountdownCircleTimer>
+            </>
+          )}
+          {isLongBreak && (
+            <>
+              <CountdownCircleTimer
+                isPlaying={isPlaying}
+                duration={testLongBreakDuration}
+                colors={["#49be25", "#FFFFFF"]}
+                size={400}
+                onComplete={() => {
+                  setToPomodoro()
+                }}
+              >
+                {renderTime}
+              </CountdownCircleTimer>
+            </>
+          )}
         </div>
+        <h1 className="text-center text-xl my-10">{`Pomodoros: ${pomodoroCount}`}</h1>
+
         <div className="mt-10 flex justify-center space-x-10">
-          <button className="w-36 h-12 box-border rounded border border-white p-3 hover:bg-white hover:text-green-500 flex justify-center items-center"
-            onClick={() => pausePomodoro(!isPlaying)}
-          >
-            Pause
-          </button>
-          <button className="w-36 h-12 box-border rounded border border-white p-3 hover:bg-white hover:text-green-500 flex justify-center items-center"
+          {isPlaying ? (
+            <button
+              className="w-36 h-12 box-border rounded border border-white p-3 hover:bg-white hover:text-green-500 flex justify-center items-center"
+              onClick={() => pausePomodoro(!isPlaying)}
+            >
+              Pause
+            </button>
+          ) : (
+            <button
+              className="w-36 h-12 box-border rounded border border-white p-3 hover:bg-white hover:text-green-500 flex justify-center items-center"
+              onClick={() => pausePomodoro(!isPlaying)}
+            >
+              Play
+            </button>
+          )}
+
+          <button
+            className="w-36 h-12 box-border rounded border border-white p-3 hover:bg-white hover:text-green-500 flex justify-center items-center"
             onClick={() => stopPomodoro()}
           >
             Stop
