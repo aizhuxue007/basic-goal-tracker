@@ -28,8 +28,9 @@ const MainInput = ({ todos, setTodos, goals, setGoals }) => {
           return updatedGoals;
         });
       }
-      if (promptIndex < prompts.length) {
+      if (promptIndex < prompts.length - 1) {
         // For two-year, one-year, monthly, weekly and daily goals
+        console.log('in if block')
         setPromptIndex((prevPromptIndex) =>
           prevPromptIndex < prompts.length - 1 ? prevPromptIndex + 1 : 0
         );
@@ -40,6 +41,7 @@ const MainInput = ({ todos, setTodos, goals, setGoals }) => {
         addNewTodo();
       }
     }
+    console.log(promptIndex)
   };
 
   const nextQuestionForDisplayInput = () => {
