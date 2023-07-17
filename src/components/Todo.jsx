@@ -10,21 +10,19 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
-
   let isChecked = `text-green-600 line-through`;
 
-const editTodoInput = useRef(null)
+  const editTodoInput = useRef(null);
 
   const [toggleCheckbox, setToggleCheckbox] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(todo.name);
 
-    useEffect(() => {
-        if (editTodoInput.current !== null) {
-            editTodoInput.current.focus();
-        }
-        
-    }, [isEditing]);
+  useEffect(() => {
+    if (editTodoInput.current !== null) {
+      editTodoInput.current.focus();
+    }
+  }, [isEditing]);
 
   library.add(faBullseye, faPlay, faXmark, faEdit, faCircleCheck);
 
@@ -64,9 +62,9 @@ const editTodoInput = useRef(null)
 
   const handleEnterKeyPressed = (event) => {
     if (event.keyCode === 13) {
-        handleSaveClick();
+      handleSaveClick();
     }
-  }
+  };
 
   return (
     <>
@@ -125,7 +123,7 @@ const editTodoInput = useRef(null)
                 onClick={() => {
                   handleEdit(id);
                 }}
-                className={`${isChecked} pl-2 cursor-pointer`}
+                className={`${toggleCheckbox && isChecked} pl-2 cursor-pointer`}
               />
               <FontAwesomeIcon
                 icon={faPlay}

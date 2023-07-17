@@ -46,7 +46,6 @@ function App() {
   return (
     <>
       <GridLayout showModal={showModal}/>
-      <h1 className="text-center text-xl mb-10">{`Pomodoros: ${pomodoroCount}`}</h1>
       <Modal
         isOpen={isOpenModal}
         onRequestClose={closeModal}

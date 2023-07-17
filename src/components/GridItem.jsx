@@ -3,15 +3,16 @@ import { faBullseye } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const GridItem = ({ title, gridProps, input, font, children }) => {
+const GridItem = ({ title, gridProps, input, font, hTagRef, children }) => {
   let tailWindClasses = `grid-item p-2 ${gridProps}`;
+  library.add(faBullseye)
   return (
     <>
       <div className={`${tailWindClasses}`}>
         <div
           className={`item-container relative w-full h-full rounded-3xl bg-green-500 p-3 text-white`}
         >
-          <h1 className="text-2xl font-bold text-center">
+          <h1 ref={hTagRef} className="text-2xl font-bold text-center">
             {title}
             {font ? (
               <span>

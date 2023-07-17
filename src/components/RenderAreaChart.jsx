@@ -2,7 +2,6 @@ import React from "react";
 import {
   AreaChart,
   Area,
-  CartesianGrid,
   XAxis,
   YAxis,
 } from "recharts";
