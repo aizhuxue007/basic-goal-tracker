@@ -7,87 +7,83 @@ import MainInput from "./MainInput";
 import RenderAreaCharts from "./RenderAreaCharts";
 
 const GridLayout = ({ showModal }) => {
-  let goalsFromStorage = localStorage.getItem("goals");
-  let todosFromStorage = localStorage.getItem("todos")
-
+  const keepTrackStats = 'Stats'
+  const goalsDefault = [
+    {
+      id: 0,
+      time: "Two-Year Goal",
+      question: "What's the one thing I want to accomplish in two years?",
+      input: "I want to be making $100,000 a year as a full-time AWS DevOps.",
+      font: true,
+    },
+    {
+      id: 1,
+      time: "One-Year Goal",
+      question:
+        "Based on my Two Year Goal, what's the one thing I can do this year?",
+      input: "Secure a web developer role to learn and gain experience.",
+      font: false,
+    },
+    {
+      id: 2,
+      time: "Monthly Goal",
+      question:
+        "Based on my One Year Goal, what's the one thing I can do this month?",
+      input:
+        "Complete HTML/CSS, Practical Javascript and Git Like a Pro Courses.",
+      font: false,
+    },
+    {
+      id: 3,
+      time: "Weekly Goal",
+      question:
+        "Based on my Monthly Goal, what's the one thing I can do this week?",
+      input: "Finish HTML/CSS course and start Practical Javascript Course",
+      font: false,
+    },
+    {
+      id: 4,
+      time: "Daily Goal",
+      question: "Based on my Weekly Goal, what's the one thing I can do today?",
+      input: "Complete 50% of the HTML/CSS course.",
+      font: false,
+    },
+    {
+      id: 5,
+      time: "Right Now",
+      question:
+        "Based on my Daily Goal, what's the one thing I can do right now?",
+      input: "Continue on the CSS course and code along.",
+      font: false,
+    }
+  ]
+  // const parsedGoals = goalsFromStorage ? JSON.parse(goalsFromStorage) : []
+  
   const hTagRefs = useRef([]);
   const [mainInput, setMainInput] = useState("");
 
-  const [todos, setTodos] = useState(todosFromStorage ? todosFromStorage : []);
-  const [goals, setGoals] = useState(
-    goalsFromStorage ? goalsFromStorage : []
-  );
+  const [todos, setTodos] = useState([]);
+  const [goals, setGoals] = useState(goalsDefault);
 
   useEffect(() => {
+    const goalsFromStorage = localStorage.getItem("goals");
     // Try to understand code!
     hTagRefs.current.forEach((ref, index) => {
       if (ref && ref.current) {
         ref.current.textContent = goals[index].input;
       }
     });
-    if (goals === null)
-      setGoals([
-        {
-          id: 0,
-          time: "Two-Year Goal",
-          question: "What's the one thing I want to accomplish in two years?",
-          input:
-            "I want to be making $100,000 a year as a full-time AWS DevOps.",
-          font: true,
-        },
-        {
-          id: 1,
-          time: "One-Year Goal",
-          question:
-            "Based on my Two Year Goal, what's the one thing I can do this year?",
-          input: "Secure a web developer role to learn and gain experience.",
-          font: false,
-        },
-        {
-          id: 2,
-          time: "Monthly Goal",
-          question:
-            "Based on my One Year Goal, what's the one thing I can do this month?",
-          input:
-            "Complete HTML/CSS, Practical Javascript and Git Like a Pro Courses.",
-          font: false,
-        },
-        {
-          id: 3,
-          time: "Weekly Goal",
-          question:
-            "Based on my Monthly Goal, what's the one thing I can do this week?",
-          input: "Finish HTML/CSS course and start Practical Javascript Course",
-          font: false,
-        },
-        {
-          id: 4,
-          time: "Daily Goal",
-          question:
-            "Based on my Weekly Goal, what's the one thing I can do today?",
-          input: "Complete 50% of the HTML/CSS course.",
-          font: false,
-        },
-        {
-          id: 5,
-          time: "Right Now",
-          question:
-            "Based on my Daily Goal, what's the one thing I can do right now?",
-          input: "Continue on the CSS course and code along.",
-          font: false,
-        },
-      ]
-    );
+    if (Array.isArray(goalsFromStorage)) {
+      setGoals(goalsFromStorage)
+    }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("goals", goals);
-
-  }, [goals]);
-
-  useEffect(() => {
-    localStorage.setItem("todos", todos)
-  })
+    localStorage.setItem('goals', JSON.stringify(goals))
+    // console.log(JSON.parse(localStorage.getItem('goals')))
+    let testGoalsFromStorage = localStorage.getItem('goals')
+    console.log(`testFromStorage: ${testGoalsFromStorage}`)
+  }, [goals])
 
   let goalsToRender = goals.slice(0, -1);
 
@@ -101,6 +97,11 @@ const GridLayout = ({ showModal }) => {
     setTodos(updatedTodos);
   };
 
+  const clearLocalStorage = () => {
+    localStorage.removeItem("goals");
+    setGoals([]);
+  };
+
   const handleDeleteTodo = (id) => {
     const updatedTodos = todos.filter((todo) => todo.id != id);
     setTodos(updatedTodos);
@@ -112,17 +113,17 @@ const GridLayout = ({ showModal }) => {
         className="grid w-full grid-cols-4 justify-items-stretch gap-1 p-1"
         style={{ height: "100dvh" }}
       >
-        {goalsToRender.map((goal, index) => (
-          <>
-            {/* {console.log(goalsToRender.length)} */}
+        {(Array.isArray(goalsToRender)) && goalsToRender.map((goal, index) => (
+          <div key={index}>
             <GridItem
               key={index}
               goal={goal}
+              title={goal.time}
               mainInput={mainInput}
               setMainInput={setMainInput}
               hTagRef={(ref) => (hTagRefs.current[index] = ref)}
             />
-          </>
+          </div>
         ))}
 
         <MainGrid>
@@ -151,10 +152,12 @@ const GridLayout = ({ showModal }) => {
           </div>
         </MainGrid>
 
-        <GridItem title={"Stats"} gridProps={"row-start-2 row-span-3"}>
+        <GridItem key={98} title={keepTrackStats} gridProps={"row-start-2 row-span-3"}>
           <RenderAreaCharts />
         </GridItem>
       </div>
+      <button onClick={clearLocalStorage}>Clear localStorage</button>
+
     </>
   );
 };

@@ -16,7 +16,7 @@ const MainInput = ({ todos, setTodos, goals, setGoals, mainInput, setMainInput }
   }, [promptIndex]);
 
   // Variables
-  const prompts = goals.map((goal) => goal.question);
+  const prompts = (typeof(goals) === 'object') && goals.map((goal) => goal.question);
 
   const handleEnterKeyPressed = (event) => {
     if (event.keyCode === 13) {

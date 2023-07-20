@@ -3,7 +3,16 @@ import { faBullseye, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const GridItem = ({ key, goal, hTagRef, gridProps, children, mainInput, setMainInput }) => {
+const GridItem = ({
+  key,
+  title,
+  goal,
+  hTagRef,
+  gridProps,
+  children,
+  mainInput,
+  setMainInput,
+}) => {
   const [isChecked, setIsChecked] = useState(false);
 
   let gridClasses = `grid-item p-2 ${gridProps}`;
@@ -12,20 +21,19 @@ const GridItem = ({ key, goal, hTagRef, gridProps, children, mainInput, setMainI
   library.add(faBullseye, faEdit);
 
   const handleCheckboxToggle = () => {
-    toggleIsChecked()
+    toggleIsChecked();
   };
 
   const toggleIsChecked = () => {
     setIsChecked(!isChecked);
-  }
+  };
 
   const editGoal = () => {
     // set mainInput question to goal.time
-    setMainInput("")
+    setMainInput("");
     // uncheck isChecked
-    toggleIsChecked()
-  }
-
+    toggleIsChecked();
+  };
 
   return (
     <>
@@ -33,16 +41,17 @@ const GridItem = ({ key, goal, hTagRef, gridProps, children, mainInput, setMainI
         <div
           className={`item-container relative w-full h-full rounded-3xl bg-green-500 p-3 text-white`}
         >
-          {goal && (
+          {goal ? (
             <>
               <h1 ref={hTagRef} className="text-2xl font-bold text-center">
-                {goal.time}
+                {title}
                 {goal.font && (
                   <span>
                     <FontAwesomeIcon icon={faBullseye} className="" />
                   </span>
                 )}
               </h1>
+
               <div className="goal-details">
                 <h2
                   className={`mt-5 text-1xl font-light ${
@@ -55,10 +64,11 @@ const GridItem = ({ key, goal, hTagRef, gridProps, children, mainInput, setMainI
               {goal.input && (
                 <div className="w-full flex justify-end">
                   {isChecked && (
-                    <FontAwesomeIcon 
-                    className={`${checkedBoxClasses} cursor-pointer`} 
-                    onClick={() => editGoal(goal.id)}
-                    icon={faEdit} />
+                    <FontAwesomeIcon
+                      className={`${checkedBoxClasses} cursor-pointer`}
+                      onClick={() => editGoal(goal.id)}
+                      icon={faEdit}
+                    />
                   )}
                   <input
                     type="checkbox"
@@ -68,7 +78,7 @@ const GridItem = ({ key, goal, hTagRef, gridProps, children, mainInput, setMainI
                 </div>
               )}
             </>
-          )}
+          ) : <h1 className="text-2xl font-bold text-center mb-5">{title}</h1> }
           {children}
         </div>
       </div>
