@@ -7,7 +7,7 @@ const GridItem = ({
   key,
   title,
   goal,
-
+  updateGoals,
   hTagRef,
   gridProps,
   children,
@@ -35,8 +35,8 @@ const GridItem = ({
   };
 
   const editGoal = () => {
-    console.log('in edit goal')
-    updateGoal(goal.id, "updating goals")
+    console.log('in edit goal ', goal.id)
+    updateGoals(goal.id, "updating goals")
   };
 
   return (

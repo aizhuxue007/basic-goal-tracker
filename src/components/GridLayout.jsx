@@ -97,7 +97,13 @@ const GridLayout = ({ showModal }) => {
     setTodos(updatedTodos);
   };
 
+  const displayEditGoalQuestion = (id) => {
+    let targetGoal = goals.find(goal => goal.id === id)
+    prompt(targetGoal.question)
+  }
+
   const updateGoals = (id, newInput) => {
+    displayEditGoalQuestion(id)
     setGoals((prevGoals) => 
       prevGoals.map((goal) =>
         goal.id === id ? { ...goal, input: newInput } : goal
