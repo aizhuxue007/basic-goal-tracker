@@ -7,6 +7,7 @@ const GridItem = ({
   key,
   title,
   goal,
+
   hTagRef,
   gridProps,
   children,
@@ -25,14 +26,17 @@ const GridItem = ({
   };
 
   const toggleIsChecked = () => {
-    setIsChecked(!isChecked);
+    if (isChecked) {
+      setIsChecked(false);
+    }
+    else {
+      setIsChecked(true);
+    }
   };
 
   const editGoal = () => {
-    // set mainInput question to goal.time
-    setMainInput("");
-    // uncheck isChecked
-    toggleIsChecked();
+    console.log('in edit goal')
+    updateGoal(goal.id, "updating goals")
   };
 
   return (
@@ -66,7 +70,7 @@ const GridItem = ({
                   {isChecked && (
                     <FontAwesomeIcon
                       className={`${checkedBoxClasses} cursor-pointer`}
-                      onClick={() => editGoal(goal.id)}
+                      onClick={() => editGoal()}
                       icon={faEdit}
                     />
                   )}

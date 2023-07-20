@@ -97,6 +97,14 @@ const GridLayout = ({ showModal }) => {
     setTodos(updatedTodos);
   };
 
+  const updateGoals = (id, newInput) => {
+    setGoals((prevGoals) => 
+      prevGoals.map((goal) =>
+        goal.id === id ? { ...goal, input: newInput } : goal
+      )
+    )
+  }
+
   const clearLocalStorage = () => {
     localStorage.removeItem("goals");
     setGoals([]);
@@ -118,6 +126,7 @@ const GridLayout = ({ showModal }) => {
             <GridItem
               key={index}
               goal={goal}
+              updateGoals={updateGoals}
               title={goal.time}
               mainInput={mainInput}
               setMainInput={setMainInput}
