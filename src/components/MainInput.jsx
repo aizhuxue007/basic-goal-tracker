@@ -41,7 +41,6 @@ const MainInput = ({ todos, setTodos, goals, setGoals, mainInput, setMainInput }
         addNewTodo();
       }
     }
-    console.log(promptIndex)
   };
 
   const askEditPromptFromGridItem = (question) => {

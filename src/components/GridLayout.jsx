@@ -8,81 +8,84 @@ import RenderAreaCharts from "./RenderAreaCharts";
 
 const GridLayout = ({ showModal }) => {
   const keepTrackStats = 'Stats'
-  const goalsDefault = [
-    {
-      id: 0,
-      time: "Two-Year Goal",
-      question: "What's the one thing I want to accomplish in two years?",
-      input: "I want to be making $100,000 a year as a full-time AWS DevOps.",
-      font: true,
-    },
-    {
-      id: 1,
-      time: "One-Year Goal",
-      question:
-        "Based on my Two Year Goal, what's the one thing I can do this year?",
-      input: "Secure a web developer role to learn and gain experience.",
-      font: false,
-    },
-    {
-      id: 2,
-      time: "Monthly Goal",
-      question:
-        "Based on my One Year Goal, what's the one thing I can do this month?",
-      input:
-        "Complete HTML/CSS, Practical Javascript and Git Like a Pro Courses.",
-      font: false,
-    },
-    {
-      id: 3,
-      time: "Weekly Goal",
-      question:
-        "Based on my Monthly Goal, what's the one thing I can do this week?",
-      input: "Finish HTML/CSS course and start Practical Javascript Course",
-      font: false,
-    },
-    {
-      id: 4,
-      time: "Daily Goal",
-      question: "Based on my Weekly Goal, what's the one thing I can do today?",
-      input: "Complete 50% of the HTML/CSS course.",
-      font: false,
-    },
-    {
-      id: 5,
-      time: "Right Now",
-      question:
-        "Based on my Daily Goal, what's the one thing I can do right now?",
-      input: "Continue on the CSS course and code along.",
-      font: false,
-    }
-  ]
+  // const goalsDefault = [
+  //   {
+  //     id: 0,
+  //     time: "Two-Year Goal",
+  //     question: "What's the one thing I want to accomplish in two years?",
+  //     input: "I want to be making $100,000 a year as a full-time AWS DevOps.",
+  //     font: true,
+  //   },
+  //   {
+  //     id: 1,
+  //     time: "One-Year Goal",
+  //     question:
+  //       "Based on my Two Year Goal, what's the one thing I can do this year?",
+  //     input: "Secure a web developer role to learn and gain experience.",
+  //     font: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     time: "Monthly Goal",
+  //     question:
+  //       "Based on my One Year Goal, what's the one thing I can do this month?",
+  //     input:
+  //       "Complete HTML/CSS, Practical Javascript and Git Like a Pro Courses.",
+  //     font: false,
+  //   },
+  //   {
+  //     id: 3,
+  //     time: "Weekly Goal",
+  //     question:
+  //       "Based on my Monthly Goal, what's the one thing I can do this week?",
+  //     input: "Finish HTML/CSS course and start Practical Javascript Course",
+  //     font: false,
+  //   },
+  //   {
+  //     id: 4,
+  //     time: "Daily Goal",
+  //     question: "Based on my Weekly Goal, what's the one thing I can do today?",
+  //     input: "Complete 50% of the HTML/CSS course.",
+  //     font: false,
+  //   },
+  //   {
+  //     id: 5,
+  //     time: "Right Now",
+  //     question:
+  //       "Based on my Daily Goal, what's the one thing I can do right now?",
+  //     input: "Continue on the CSS course and code along.",
+  //     font: false,
+  //   }
+  // ]
   // const parsedGoals = goalsFromStorage ? JSON.parse(goalsFromStorage) : []
-  
+  const goalsFromStorage = JSON.parse(localStorage.getItem("goals"));
+  console.log(goalsFromStorage)
   const hTagRefs = useRef([]);
   const [mainInput, setMainInput] = useState("");
 
   const [todos, setTodos] = useState([]);
-  const [goals, setGoals] = useState(goalsDefault);
+  const [goals, setGoals] = useState(goalsFromStorage || [])
+  console.log(goals)
 
   useEffect(() => {
-    const goalsFromStorage = localStorage.getItem("goals");
+    
+    if (Array.isArray(goalsFromStorage)) {
+      setGoals(goalsFromStorage)
+    }
     // Try to understand code!
     hTagRefs.current.forEach((ref, index) => {
       if (ref && ref.current) {
         ref.current.textContent = goals[index].input;
       }
     });
-    if (Array.isArray(goalsFromStorage)) {
-      setGoals(goalsFromStorage)
-    }
+    
   }, []);
 
   useEffect(() => {
     localStorage.setItem('goals', JSON.stringify(goals))
     // console.log(JSON.parse(localStorage.getItem('goals')))
     let testGoalsFromStorage = localStorage.getItem('goals')
-    console.log(`testFromStorage: ${testGoalsFromStorage}`)
+    // console.log(`testFromStorage: ${testGoalsFromStorage}`)
   }, [goals])
 
   let goalsToRender = goals.slice(0, -1);
@@ -171,7 +174,7 @@ const GridLayout = ({ showModal }) => {
           <RenderAreaCharts />
         </GridItem>
       </div>
-      <button onClick={clearLocalStorage}>Clear localStorage</button>
+      <button className="bg-red-300" onClick={clearLocalStorage}>Clear localStorage</button>
 
     </>
   );
