@@ -98,8 +98,14 @@ const GridLayout = ({ showModal }) => {
   }, [goals])
 
   async function getGoalsFromSupabase() {
-    const { goalsFromSupabase } = await supabase.from('goals').select()
-    console.log(goalsFromSupabase)
+    const { data: goalsFromSupabase, error } = await supabase.from('goals').select()
+    if (error) {
+      console.error('Error fetching data from Supabase:', error);
+    } else {
+      console.log(goalsFromSupabase);
+      // Update the state variable to indicate that data is fetched
+    
+    }
   }
 
   const handleEditTodo = (id, updatedName) => {
