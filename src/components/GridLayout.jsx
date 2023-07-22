@@ -81,6 +81,8 @@ const GridLayout = ({ showModal }) => {
     }
 
     getGoalsFromSupabase();
+    // write to supabase
+    // addGoalsToSupabase();
 
     // Try to understand code!
     hTagRefs.current.forEach((ref, index) => {
