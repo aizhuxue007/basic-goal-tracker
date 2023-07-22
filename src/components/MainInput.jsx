@@ -4,7 +4,6 @@ const MainInput = ({ todos, setTodos, goals, setGoals, mainInput, setMainInput }
   const todoInput = useRef(null);
 
   const [displayText, setDisplayText] = useState("");
-  
   const [promptIndex, setPromptIndex] = useState(0);
 
   useEffect(() => {

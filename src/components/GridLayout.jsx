@@ -1,10 +1,16 @@
 import { useState, useRef, useEffect } from "react";
+import { createClient } from "@supabase/supabase-js";
 
 import GridItem from "./GridItem";
 import MainGrid from "./MainGrid";
 import Todos from "./Todos";
 import MainInput from "./MainInput";
 import RenderAreaCharts from "./RenderAreaCharts";
+
+const SUPABASE_PROJECT_URL = "https://vgigltsnmhcxllawoozp.supabase.co"
+const SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnaWdsdHNubWhjeGxsYXdvb3pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODk4NzA3OTYsImV4cCI6MjAwNTQ0Njc5Nn0.wmh_PVPtPxEuxYwGbmeN-gRWhXUTGR9Koh_9f5PN3Kk"
+
+const supabase = createClient(SUPABASE_PROJECT_URL, SUPABASE_API_KEY)
 
 const GridLayout = ({ showModal }) => {
   const keepTrackStats = 'Stats'
@@ -58,27 +64,30 @@ const GridLayout = ({ showModal }) => {
   //   }
   // ]
   // const parsedGoals = goalsFromStorage ? JSON.parse(goalsFromStorage) : []
+
   const goalsFromStorage = JSON.parse(localStorage.getItem("goals"));
-  console.log(goalsFromStorage)
   const hTagRefs = useRef([]);
   const [mainInput, setMainInput] = useState("");
 
   const [todos, setTodos] = useState([]);
   const [goals, setGoals] = useState(goalsFromStorage || [])
-  console.log(goals)
+
+  let goalsToRender = goals.slice(0, -1);
 
   useEffect(() => {
     
     if (Array.isArray(goalsFromStorage)) {
       setGoals(goalsFromStorage)
     }
+
+    getGoalsFromSupabase();
+
     // Try to understand code!
     hTagRefs.current.forEach((ref, index) => {
       if (ref && ref.current) {
         ref.current.textContent = goals[index].input;
       }
     });
-    
   }, []);
 
   useEffect(() => {
@@ -88,7 +97,10 @@ const GridLayout = ({ showModal }) => {
     // console.log(`testFromStorage: ${testGoalsFromStorage}`)
   }, [goals])
 
-  let goalsToRender = goals.slice(0, -1);
+  async function getGoalsFromSupabase() {
+    const { goalsFromSupabase } = await supabase.from('goals').select()
+    console.log(goalsFromSupabase)
+  }
 
   const handleEditTodo = (id, updatedName) => {
     const updatedTodos = todos.map((todo) => {
