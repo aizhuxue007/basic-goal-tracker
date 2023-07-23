@@ -93,10 +93,10 @@ const GridLayout = ({ showModal }) => {
   }, []);
 
   useEffect(() => {
+    // save goals for persistent data
     localStorage.setItem('goals', JSON.stringify(goals))
-    // console.log(JSON.parse(localStorage.getItem('goals')))
-    let testGoalsFromStorage = localStorage.getItem('goals')
-    // console.log(`testFromStorage: ${testGoalsFromStorage}`)
+    console.log(goals)
+    insertGoalsToSupabase()
   }, [goals])
 
   async function getGoalsFromSupabase() {
@@ -108,6 +108,14 @@ const GridLayout = ({ showModal }) => {
       // Update the state variable to indicate that data is fetched
     
     }
+  }
+
+  const insertGoalsToSupabase = async () => {
+    // make row from goals variable?
+    
+    // make variables that deconstructs from supabase.from. 
+    const { resp, err } = supabase.from('goals').insert(goals)
+    // handle errors
   }
 
   const handleEditTodo = (id, updatedName) => {
