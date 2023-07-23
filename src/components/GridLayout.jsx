@@ -1,19 +1,21 @@
 import { useState, useRef, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 
+
 import GridItem from "./GridItem";
 import MainGrid from "./MainGrid";
 import Todos from "./Todos";
 import MainInput from "./MainInput";
 import RenderAreaCharts from "./RenderAreaCharts";
 
-const SUPABASE_PROJECT_URL = "https://vgigltsnmhcxllawoozp.supabase.co"
-const SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnaWdsdHNubWhjeGxsYXdvb3pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODk4NzA3OTYsImV4cCI6MjAwNTQ0Njc5Nn0.wmh_PVPtPxEuxYwGbmeN-gRWhXUTGR9Koh_9f5PN3Kk"
+const SUPABASE_PROJECT_URL = "https://vgigltsnmhcxllawoozp.supabase.co";
+const SUPABASE_API_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnaWdsdHNubWhjeGxsYXdvb3pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODk4NzA3OTYsImV4cCI6MjAwNTQ0Njc5Nn0.wmh_PVPtPxEuxYwGbmeN-gRWhXUTGR9Koh_9f5PN3Kk";
 
-const supabase = createClient(SUPABASE_PROJECT_URL, SUPABASE_API_KEY)
+const supabase = createClient(SUPABASE_PROJECT_URL, SUPABASE_API_KEY);
 
 const GridLayout = ({ showModal }) => {
-  const keepTrackStats = 'Stats'
+  const keepTrackStats = "Stats";
   // const goalsDefault = [
   //   {
   //     id: 0,
@@ -70,19 +72,16 @@ const GridLayout = ({ showModal }) => {
   const [mainInput, setMainInput] = useState("");
 
   const [todos, setTodos] = useState([]);
-  const [goals, setGoals] = useState(goalsFromStorage || [])
+  const [goals, setGoals] = useState(goalsFromStorage || []);
 
   let goalsToRender = goals.slice(0, -1);
 
   useEffect(() => {
-    
     if (Array.isArray(goalsFromStorage)) {
-      setGoals(goalsFromStorage)
+      setGoals(goalsFromStorage);
     }
 
     getGoalsFromSupabase();
-    // write to supabase
-    // addGoalsToSupabase();
 
     // Try to understand code!
     hTagRefs.current.forEach((ref, index) => {
@@ -94,29 +93,46 @@ const GridLayout = ({ showModal }) => {
 
   useEffect(() => {
     // save goals for persistent data
-    localStorage.setItem('goals', JSON.stringify(goals))
-    console.log(goals)
-    insertGoalsToSupabase()
-  }, [goals])
+    localStorage.setItem("goals", JSON.stringify(goals));
+    // console.log(goals)
+    insertGoalsToSupabase();
+  }, [goals]);
 
   async function getGoalsFromSupabase() {
-    const { data: goalsFromSupabase, error } = await supabase.from('goals').select()
+    const { data: goalsFromSupabase, error } = await supabase
+      .from("goals")
+      .select();
     if (error) {
-      console.error('Error fetching data from Supabase:', error);
+      console.error("Error fetching data from Supabase:", error);
     } else {
       console.log(goalsFromSupabase);
       // Update the state variable to indicate that data is fetched
-    
     }
   }
 
   const insertGoalsToSupabase = async () => {
-    // make row from goals variable?
-    
-    // make variables that deconstructs from supabase.from. 
-    const { resp, err } = supabase.from('goals').insert(goals)
-    // handle errors
-  }
+    // loop through goals
+    goals.map(async (goal) => {
+
+      let now = new Date().getDate()
+
+      // make newGoal that fits to goals table in supabase
+      const newGoal = {
+        id: goal.id,
+        created_at: now,
+        deadline: "Tomorrow",
+        question: goal.question,
+        input: goal.input,
+        font: goal.font,
+      };
+
+      // make variables that deconstructs from supabase.from.
+      const { resp, err } = await supabase.from("goals").insert([newGoal]);
+      if (err) throw err;
+      console.log(resp, "inserted row");
+
+    });
+  };
 
   const handleEditTodo = (id, updatedName) => {
     const updatedTodos = todos.map((todo) => {
@@ -129,18 +145,18 @@ const GridLayout = ({ showModal }) => {
   };
 
   const displayEditGoalQuestion = (id) => {
-    let targetGoal = goals.find(goal => goal.id === id)
-    prompt(targetGoal.question)
-  }
+    let targetGoal = goals.find((goal) => goal.id === id);
+    prompt(targetGoal.question);
+  };
 
   const updateGoals = (id, newInput) => {
-    displayEditGoalQuestion(id)
-    setGoals((prevGoals) => 
+    displayEditGoalQuestion(id);
+    setGoals((prevGoals) =>
       prevGoals.map((goal) =>
         goal.id === id ? { ...goal, input: newInput } : goal
       )
-    )
-  }
+    );
+  };
 
   const clearLocalStorage = () => {
     localStorage.removeItem("goals");
@@ -154,23 +170,21 @@ const GridLayout = ({ showModal }) => {
 
   return (
     <>
-      <div
-        className="grid w-full grid-cols-4 justify-items-stretch gap-1 p-1"
-        style={{ height: "100dvh" }}
-      >
-        {(Array.isArray(goalsToRender)) && goalsToRender.map((goal, index) => (
-          <div key={index}>
-            <GridItem
-              key={index}
-              goal={goal}
-              updateGoals={updateGoals}
-              title={goal.time}
-              mainInput={mainInput}
-              setMainInput={setMainInput}
-              hTagRef={(ref) => (hTagRefs.current[index] = ref)}
-            />
-          </div>
-        ))}
+      <div className="grid w-full grid-cols-4 justify-items-stretch gap-1 p-1">
+        {Array.isArray(goalsToRender) &&
+          goalsToRender.map((goal, index) => (
+            <div key={index}>
+              <GridItem
+                key={index}
+                goal={goal}
+                updateGoals={updateGoals}
+                title={goal.time}
+                mainInput={mainInput}
+                setMainInput={setMainInput}
+                hTagRef={(ref) => (hTagRefs.current[index] = ref)}
+              />
+            </div>
+          ))}
 
         <MainGrid>
           <div className="interactive h-5/6 w-full rounded-3xl bg-green-500 text-white p-3">
@@ -198,12 +212,14 @@ const GridLayout = ({ showModal }) => {
           </div>
         </MainGrid>
 
-        <GridItem key={98} title={keepTrackStats} gridProps={"row-start-2 row-span-3"}>
+        <GridItem
+          key={98}
+          title={keepTrackStats}
+          gridProps={"row-start-2 row-span-3"}
+        >
           <RenderAreaCharts />
         </GridItem>
       </div>
-      <button className="bg-red-300" onClick={clearLocalStorage}>Clear localStorage</button>
-
     </>
   );
 };
