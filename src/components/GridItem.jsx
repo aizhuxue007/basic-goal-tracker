@@ -1,22 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { faBullseye, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const GridItem = ({
   title,
+  goals,
   goal,
+  isChecked,
+  setIsChecked,
   updateGoals,
   hTagRef,
   gridProps,
   children,
 }) => {
-  const [isChecked, setIsChecked] = useState(false);
+
 
   let gridClasses = `grid-item p-2 h-full ${gridProps}`;
   let checkedBoxClasses = `text-green-700 line-through`;
 
   library.add(faBullseye, faEdit);
+
+  useEffect(() => {
+
+  }
+  ,[goals])
 
   const handleCheckboxToggle = () => {
     toggleIsChecked();
@@ -31,7 +39,7 @@ const GridItem = ({
   };
 
   const editGoal = () => {
-    updateGoals(goal.id, "updating goals");
+    updateGoals(goal.id);
   };
 
   return (
