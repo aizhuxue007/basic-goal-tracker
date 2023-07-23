@@ -4,7 +4,6 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const GridItem = ({
-  key,
   title,
   goal,
   updateGoals,
@@ -14,7 +13,7 @@ const GridItem = ({
 }) => {
   const [isChecked, setIsChecked] = useState(false);
 
-  let gridClasses = `grid-item p-2 ${gridProps}`;
+  let gridClasses = `grid-item p-2 h-full ${gridProps}`;
   let checkedBoxClasses = `text-green-700 line-through`;
 
   library.add(faBullseye, faEdit);
@@ -32,8 +31,6 @@ const GridItem = ({
   };
 
   const editGoal = () => {
-    console.log("in edit goal ", goal.id);
-    prompt("What would you like to edit to?");
     updateGoals(goal.id, "updating goals");
   };
 
@@ -41,7 +38,7 @@ const GridItem = ({
     <>
       <div className={`${gridClasses}`}>
         <div
-          className={`item-container relative w-full h-full rounded-3xl bg-green-500 p-3 text-white`}
+          className={`item-container h-full rounded-3xl bg-green-500 p-3 text-white`}
         >
           {goal ? (
             <>
@@ -49,7 +46,7 @@ const GridItem = ({
                 {title}
                 {goal.font && (
                   <span>
-                    <FontAwesomeIcon icon={faBullseye} className="" />
+                    <FontAwesomeIcon icon={faBullseye} />
                   </span>
                 )}
               </h1>

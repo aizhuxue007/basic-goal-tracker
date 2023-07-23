@@ -3,12 +3,10 @@ import React, {useState} from "react"
 import Modal from "react-modal";
 import GridLayout from "./components/GridLayout";
 import Pomodoro from "./components/Pomodoro"
-import "./css/App.css";
-
 
 function App() {
-  const [isOpenModal, setIsOpenModal] = useState(false)
-  const [task, setTask] = useState('')
+  const [ isOpenModal, setIsOpenModal ] = useState(false)
+  const [ task, setTask ] = useState('')
   const [ pomodoroCount, setPomodoroCount ] = useState(0)
 
   const customModalStyles = {
@@ -44,7 +42,7 @@ function App() {
   }
 
   return (
-    <>
+    <div className="h-screen">
       <GridLayout showModal={showModal}/>
       <Modal
         isOpen={isOpenModal}
@@ -56,7 +54,7 @@ function App() {
         <Pomodoro task={task} closeModal={closeModal} count={pomodoroCount} setCount={setPomodoroCount}/>
       </Modal>
       
-    </>
+    </div>
   );
 }
 

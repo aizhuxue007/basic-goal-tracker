@@ -74,7 +74,7 @@ const GridLayout = ({ showModal }) => {
   const [todos, setTodos] = useState([]);
   const [goals, setGoals] = useState(goalsFromStorage || []);
 
-  let goalsToRender = goals.slice(0, -1);
+  let goalsToRender = goals;
 
   useEffect(() => {
     if (Array.isArray(goalsFromStorage)) {
@@ -92,31 +92,32 @@ const GridLayout = ({ showModal }) => {
   }, []);
 
   useEffect(() => {
-    // save goals for persistent data
     localStorage.setItem("goals", JSON.stringify(goals));
-    // console.log(goals)
     insertGoalsToSupabase();
   }, [goals]);
 
-  async function getGoalsFromSupabase() {
+  const getGoalsFromSupabase = async () =>{
     const { data: goalsFromSupabase, error } = await supabase
       .from("goals")
       .select();
     if (error) {
       console.error("Error fetching data from Supabase:", error);
     } else {
-      console.log(goalsFromSupabase);
       // Update the state variable to indicate that data is fetched
+      setGoalsFromSupabase(goalsFromSupabase)
     }
   }
 
-  const insertGoalsToSupabase = async () => {
-    // loop through goals
-    goals.map(async (goal) => {
+  const setGoalsFromSupabase = (goalsFromSupabase) => {
+    setGoals(goalsFromSupabase)
+  }
 
+  const insertGoalsToSupabase = async () => {
+    goals.map(async (goal) => {
       let now = new Date().getDate()
 
-      // make newGoal that fits to goals table in supabase
+      if (checkExistingGoalInSupabase(goal)) return;
+
       const newGoal = {
         id: goal.id,
         created_at: now,
@@ -126,13 +127,26 @@ const GridLayout = ({ showModal }) => {
         font: goal.font,
       };
 
-      // make variables that deconstructs from supabase.from.
       const { resp, err } = await supabase.from("goals").insert([newGoal]);
       if (err) throw err;
-      console.log(resp, "inserted row");
-
+      else console.log(resp)
     });
   };
+
+  const checkExistingGoalInSupabase = async (goal) => {
+    const existingGoals = await supabase
+      .from("goals")
+      .select("*")
+      .eq("question", goal.question)
+      .eq("input", goal.input)
+      .eq("font", goal.font)
+    
+    if (existingGoals.length > 0) {
+      console.log(`Goal ${goal} exists already in database`)
+      return true
+    }
+    return false
+  }
 
   const handleEditTodo = (id, updatedName) => {
     const updatedTodos = todos.map((todo) => {
@@ -158,24 +172,19 @@ const GridLayout = ({ showModal }) => {
     );
   };
 
-  const clearLocalStorage = () => {
-    localStorage.removeItem("goals");
-    setGoals([]);
-  };
-
   const handleDeleteTodo = (id) => {
     const updatedTodos = todos.filter((todo) => todo.id != id);
     setTodos(updatedTodos);
   };
 
   return (
-    <>
-      <div className="grid w-full grid-cols-4 justify-items-stretch gap-1 p-1">
+      <div className="h-screen grid grid-cols-4 grid-rows-4 justify-items-stretch items-stretch gap-1 p-1">
         {Array.isArray(goalsToRender) &&
           goalsToRender.map((goal, index) => (
+            
             <div key={index}>
+              {console.log(goal)}
               <GridItem
-                key={index}
                 goal={goal}
                 updateGoals={updateGoals}
                 title={goal.time}
@@ -187,7 +196,7 @@ const GridLayout = ({ showModal }) => {
           ))}
 
         <MainGrid>
-          <div className="interactive h-5/6 w-full rounded-3xl bg-green-500 text-white p-3">
+          <div className="interactive w-full h-5/6 rounded-3xl bg-green-500 text-white p-3">
             <h1 className="right-now__title  text-2xl font-bold text-center">
               Things to Do Right Now
             </h1>
@@ -220,7 +229,6 @@ const GridLayout = ({ showModal }) => {
           <RenderAreaCharts />
         </GridItem>
       </div>
-    </>
   );
 };
 
