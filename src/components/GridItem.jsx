@@ -11,8 +11,6 @@ const GridItem = ({
   hTagRef,
   gridProps,
   children,
-  mainInput,
-  setMainInput,
 }) => {
   const [isChecked, setIsChecked] = useState(false);
 
@@ -28,15 +26,15 @@ const GridItem = ({
   const toggleIsChecked = () => {
     if (isChecked) {
       setIsChecked(false);
-    }
-    else {
+    } else {
       setIsChecked(true);
     }
   };
 
   const editGoal = () => {
-    console.log('in edit goal ', goal.id)
-    updateGoals(goal.id, "updating goals")
+    console.log("in edit goal ", goal.id);
+    prompt("What would you like to edit to?");
+    updateGoals(goal.id, "updating goals");
   };
 
   return (
@@ -82,7 +80,9 @@ const GridItem = ({
                 </div>
               )}
             </>
-          ) : <h1 className="text-2xl font-bold text-center mb-5">{title}</h1> }
+          ) : (
+            <h1 className="text-2xl font-bold text-center mb-5">{title}</h1>
+          )}
           {children}
         </div>
       </div>
