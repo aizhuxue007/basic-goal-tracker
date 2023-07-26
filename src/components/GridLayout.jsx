@@ -39,13 +39,16 @@ const GridLayout = ({ showModal }) => {
         ref.current.textContent = goals[index].input;
       }
     });
+
+    // updateGoalsAtSupabase(99);
+    // deleteGoalsRowInSupabase(99)
+    
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("goals", JSON.stringify(goals));
     insertGoalsToSupabase();
   }, [goals]);
-
+ 
   const getGoalsFromSupabase = async () => {
     const { data: goalsFromSupabase, error } = await supabase
       .from("goals")
@@ -55,11 +58,11 @@ const GridLayout = ({ showModal }) => {
       console.error("Error fetching data from Supabase:", error);
     } else {
       // Update the state variable to indicate that data is fetched
-      setGoalsFromSupabase(goalsFromSupabase);
+      loadGoalsFromSupabase(goalsFromSupabase);
     }
   };
 
-  const setGoalsFromSupabase = (goalsFromSupabase) => {
+  const loadGoalsFromSupabase = (goalsFromSupabase) => {
     setGoals(goalsFromSupabase);
   };
 
@@ -80,6 +83,43 @@ const GridLayout = ({ showModal }) => {
       else console.log(resp);
     });
   };
+  const getFormattedDate = () => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth(); // Months are zero-based (0 to 11)
+    const currentDay = currentDate.getDate();
+    const actualMonth = currentMonth + 1;
+    return `${currentYear}-${actualMonth}-${currentDay}`;
+  };
+  const updateGoalsAtSupabase = async (id) => {
+    let now = getFormattedDate();
+    const newValue = {
+      created_at: now,
+      deadline: "right now",
+      question: "just changed it",
+      input: "now wait!",
+      font: false,
+      time: null,
+    };
+    const { data, error } = await supabase
+      .from("goals")
+      .update(newValue)
+      .eq("id", id);
+    if (error) {
+      console.log("Error updated row", id, error.message);
+    } else {
+      console.log("Row updated successfully", data);
+    }
+  };
+
+  const deleteGoalsRowInSupabase = async (id) => {
+    const { data, error } = await supabase
+      .from('goals')
+      .delete()
+      .eq('id', id)
+    if (error) console.log('Error encountered when deleting row', error.message)
+    console.log('Deleting row successful!', data)
+  }
 
   const checkExistingGoalInSupabase = async (goal) => {
     const existingGoals = await supabase
