@@ -27,11 +27,8 @@ const GridLayout = ({ showModal }) => {
   let goalsToRender = goals;
 
   useEffect(() => {
-    if (Array.isArray(goalsFromStorage)) {
-      setGoals(goalsFromStorage);
-    }
-
     getGoalsFromSupabase();
+    getTodosFromSupabase();
 
     // Try to understand code!
     hTagRefs.current.forEach((ref, index) => {
@@ -48,7 +45,32 @@ const GridLayout = ({ showModal }) => {
   useEffect(() => {
     insertGoalsToSupabase();
   }, [goals]);
+
+  useEffect(() => {
+    // insertTodosToSupabase();
+  }, [todos])
  
+  const handleError = (e) => {
+    if (e) {
+      console.error("Error fetching data from Supabase:", e);
+      return true
+    }
+    return false
+  }
+
+  const loadTodosFromSupabase = (todos) => {
+    setTodos(todos)
+  }
+
+  const getTodosFromSupabase = async () => {
+    const {data: todos, error} = await supabase.from('todos')
+      .select()
+      .order("id", { ascending: true })
+    if (!handleError(error)) {
+      loadTodosFromSupabase(todos)
+    }
+  }
+
   const getGoalsFromSupabase = async () => {
     const { data: goalsFromSupabase, error } = await supabase
       .from("goals")
