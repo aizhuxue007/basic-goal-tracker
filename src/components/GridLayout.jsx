@@ -29,7 +29,7 @@ const GridLayout = ({ showModal }) => {
   useEffect(() => {
     getGoalsFromSupabase();
     getTodosFromSupabase();
-
+    
     // Try to understand code!
     hTagRefs.current.forEach((ref, index) => {
       if (ref && ref.current) {
@@ -39,7 +39,6 @@ const GridLayout = ({ showModal }) => {
 
     // updateGoalsAtSupabase(99);
     // deleteGoalsRowInSupabase(99)
-    
   }, []);
 
   useEffect(() => {
@@ -48,28 +47,36 @@ const GridLayout = ({ showModal }) => {
 
   useEffect(() => {
     // insertTodosToSupabase();
-  }, [todos])
- 
+   
+  }, [todos]);
+
   const handleError = (e) => {
     if (e) {
       console.error("Error fetching data from Supabase:", e);
-      return true
+      return true;
     }
-    return false
-  }
+    return false;
+  };
 
-  const loadTodosFromSupabase = (todos) => {
-    setTodos(todos)
-  }
+  const loadTodosFromSupabase = (todosFromSupabase) => {
+    setTodos([
+      ...todos,
+      ...todosFromSupabase.map((todo) => ({
+        id: todo.id,
+        name: todo.task_name,
+      })),
+    ]);
+  };
 
   const getTodosFromSupabase = async () => {
-    const {data: todos, error} = await supabase.from('todos')
+    const { data: todosFromSupabase, error } = await supabase
+      .from("todos")
       .select()
-      .order("id", { ascending: true })
+      .order("id", { ascending: true });
     if (!handleError(error)) {
-      loadTodosFromSupabase(todos)
+      loadTodosFromSupabase(todosFromSupabase);
     }
-  }
+  };
 
   const getGoalsFromSupabase = async () => {
     const { data: goalsFromSupabase, error } = await supabase
@@ -105,6 +112,7 @@ const GridLayout = ({ showModal }) => {
       else console.log(resp);
     });
   };
+
   const getFormattedDate = () => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
@@ -113,6 +121,7 @@ const GridLayout = ({ showModal }) => {
     const actualMonth = currentMonth + 1;
     return `${currentYear}-${actualMonth}-${currentDay}`;
   };
+
   const updateGoalsAtSupabase = async (id) => {
     let now = getFormattedDate();
     const newValue = {
@@ -135,13 +144,11 @@ const GridLayout = ({ showModal }) => {
   };
 
   const deleteGoalsRowInSupabase = async (id) => {
-    const { data, error } = await supabase
-      .from('goals')
-      .delete()
-      .eq('id', id)
-    if (error) console.log('Error encountered when deleting row', error.message)
-    console.log('Deleting row successful!', data)
-  }
+    const { data, error } = await supabase.from("goals").delete().eq("id", id);
+    if (error)
+      console.log("Error encountered when deleting row", error.message);
+    console.log("Deleting row successful!", data);
+  };
 
   const checkExistingGoalInSupabase = async (goal) => {
     const existingGoals = await supabase
@@ -158,16 +165,6 @@ const GridLayout = ({ showModal }) => {
     return false;
   };
 
-  const handleEditTodo = (id, updatedName) => {
-    const updatedTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, name: updatedName };
-      }
-      return todo;
-    });
-    setTodos(updatedTodos);
-  };
-
   const displayEditGoalQuestion = (id) => {
     let targetGoal = goals.find((goal) => goal.id === id);
     setDisplayText(targetGoal.question);
@@ -176,6 +173,16 @@ const GridLayout = ({ showModal }) => {
 
   const updateGoals = (id) => {
     displayEditGoalQuestion(id);
+  };
+
+  const handleEditTodo = (id, updatedName) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, name: updatedName };
+      }
+      return todo;
+    });
+    setTodos(updatedTodos);
   };
 
   const handleDeleteTodo = (id) => {
@@ -216,6 +223,7 @@ const GridLayout = ({ showModal }) => {
               setGoals={setGoals}
               editMode={editGoalsMode}
             />
+
             <MainInput
               todos={todos}
               setTodos={setTodos}
@@ -226,6 +234,7 @@ const GridLayout = ({ showModal }) => {
               editGoalsMode={editGoalsMode}
               setEditGoalsMode={setEditGoalsMode}
               setIsChecked={setIsChecked}
+              supabase={supabase}
             />
 
             <Todos

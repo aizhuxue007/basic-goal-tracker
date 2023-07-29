@@ -10,6 +10,7 @@ const MainInput = ({
   editGoalsMode,
   setEditGoalsMode,
   setIsChecked,
+  supabase
 }) => {
   const todoInput = useRef(null);
 
