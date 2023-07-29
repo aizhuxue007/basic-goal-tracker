@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { v4 as uuidv4 } from 'uuid';
 
 import GridItem from "./GridItem";
 import MainGrid from "./MainGrid";
@@ -28,8 +29,10 @@ const GridLayout = ({ showModal }) => {
 
   useEffect(() => {
     getGoalsFromSupabase();
-    getTodosFromSupabase();
-    
+    if (todos.length === 0) {
+      getTodosFromSupabase();
+    }
+
     // Try to understand code!
     hTagRefs.current.forEach((ref, index) => {
       if (ref && ref.current) {
@@ -46,8 +49,7 @@ const GridLayout = ({ showModal }) => {
   }, [goals]);
 
   useEffect(() => {
-    // insertTodosToSupabase();
-   
+    insertTodosToSupabase();
   }, [todos]);
 
   const handleError = (e) => {
@@ -67,6 +69,45 @@ const GridLayout = ({ showModal }) => {
       })),
     ]);
   };
+
+  const generateUniqueInteger = () => {
+    const timestamp = Date.now(); // Get the current timestamp in milliseconds
+    const randomBits = Math.floor(Math.random() * 100); // Generate some random bits (adjust the range as needed)
+  
+    // Combine the timestamp and random bits to form the unique identifier
+    const uniqueInteger = parseInt(`${timestamp}${randomBits}`, 10);
+    return uniqueInteger;
+  };
+
+  const checkExistingTodoInSupabase = async (todo) => {
+    const existingTodos = await supabase
+      .from("todos")
+      .select("*")
+      .eq("id", todo.id)
+    console.log(existingTodos)
+    if (existingTodos.length > 0) {
+      console.log(`Todo ${todo} exists already in database`);
+      return true;
+    }
+    return false;
+  }
+
+  const insertTodosToSupabase = async () => {
+    todos.map(async (todo) => {
+      if (await checkExistingTodoInSupabase(todo)) return;
+      let now = new Date().getDate();
+      let new_id = Math.floor(Math.random() * (1000 - todos.length + 1)) + 1000;
+      console.log(new_id)
+      let newTodo = {
+        id: new_id,
+        created_at: now,
+        task_name: todo.name
+      }
+      const { resp, err } = await supabase.from("todos").insert([newTodo]);
+      if (handleError(err)) return 
+      console.log(resp);
+    })
+  }
 
   const getTodosFromSupabase = async () => {
     const { data: todosFromSupabase, error } = await supabase
