@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
+import auth from "./auth";
+import supabase from "./supabase";
 import { v4 as uuidv4 } from 'uuid';
 
 import GridItem from "./GridItem";
@@ -9,11 +10,7 @@ import MainInput from "./MainInput";
 import RenderAreaCharts from "./RenderAreaCharts";
 import PromptDisplay from "./PromptDisplay";
 
-const SUPABASE_PROJECT_URL = "https://vgigltsnmhcxllawoozp.supabase.co";
-const SUPABASE_API_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZnaWdsdHNubWhjeGxsYXdvb3pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODk4NzA3OTYsImV4cCI6MjAwNTQ0Njc5Nn0.wmh_PVPtPxEuxYwGbmeN-gRWhXUTGR9Koh_9f5PN3Kk";
 
-const supabase = createClient(SUPABASE_PROJECT_URL, SUPABASE_API_KEY);
 
 const GridLayout = ({ showModal }) => {
   const goalsFromStorage = JSON.parse(localStorage.getItem("goals"));
@@ -23,7 +20,7 @@ const GridLayout = ({ showModal }) => {
   const [todos, setTodos] = useState([]);
   const [goals, setGoals] = useState(goalsFromStorage || []);
   const [editGoalsMode, setEditGoalsMode] = useState([false, 0]);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState({});
 
   let goalsToRender = goals;
 
@@ -51,6 +48,13 @@ const GridLayout = ({ showModal }) => {
   useEffect(() => {
     insertTodosToSupabase();
   }, [todos]);
+
+  const toggleIsChecked = (id) => {
+    setIsChecked((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }))
+  }
 
   const handleError = (e) => {
     if (e) {
@@ -88,7 +92,7 @@ const GridLayout = ({ showModal }) => {
       );
   
       if (isExistingTodo) {
-        console.log(`Todo ${todo.id} exists already in the database`);
+        // console.log(`Todo ${todo.id} exists already in the database`);
         return true;
       }
     }
@@ -246,8 +250,8 @@ const GridLayout = ({ showModal }) => {
               title={goal.time}
               mainInput={mainInput}
               setMainInput={setMainInput}
-              isChecked={isChecked}
-              setIsChecked={setIsChecked}
+              isChecked={isChecked[goal.id]}
+              setIsChecked={() => toggleIsChecked(goal.id)}
               hTagRef={(ref) => (hTagRefs.current[index] = ref)}
             />
           </div>
