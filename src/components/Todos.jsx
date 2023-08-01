@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import Todo from "./Todo";
 
 const Todos = ({ todos, onEditTodo, onDeleteTodo, startPomodoro }) => {

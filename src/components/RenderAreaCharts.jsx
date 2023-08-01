@@ -1,17 +1,21 @@
-import React from 'react'
+import React, { useEffect } from "react";
 import RenderAreaChart from "./RenderAreaChart";
 
-const RenderAreaCharts = () => {
-  return (
-    <div>
-        <RenderAreaChart />
-          <RenderAreaChart />
-          <RenderAreaChart />
-          <RenderAreaChart />
-          <RenderAreaChart />
-          <RenderAreaChart />
-    </div>
-  )
-}
+const RenderAreaCharts = ({ pomodoroCount, setPomodoroCount }) => {
+  useEffect(() => {
+    console.log('pomodoro count ', pomodoroCount)
+  }, [pomodoroCount])
 
-export default RenderAreaCharts
+  return (
+    <div className="w-full">
+      <RenderAreaChart />
+      {/* <RenderAreaChart />
+      <RenderAreaChart />
+      <RenderAreaChart />
+      <RenderAreaChart />
+      <RenderAreaChart /> */}
+    </div>
+  );
+};
+
+export default RenderAreaCharts;

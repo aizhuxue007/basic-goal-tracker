@@ -48,8 +48,8 @@ const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
     setEditedName(event.target.value);
   };
 
-  const handlePomodoro = (name) => {
-    startPomodoro(`${capitalizedFirstLetterStr(name)}`);
+  const handlePomodoro = (todo) => {
+    startPomodoro(todo);
   };
 
   const capitalizedFirstLetterStr = (str) => {
@@ -113,9 +113,11 @@ const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
                 />
               </div>
 
-              <label
-                className={`${toggleCheckbox && isChecked}`}
-              >{`${todo.name}`}</label>
+              <p className={`${toggleCheckbox && isChecked}`}>
+                {`${todo.name}`}
+              </p>
+
+              <p className="ml-[2em]">{`pomodoros ${todo.pomodoro}`}</p>
             </div>
             <div className="todo__icons flex items-center text-green-700">
               <FontAwesomeIcon
@@ -128,7 +130,7 @@ const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
               <FontAwesomeIcon
                 icon={faPlay}
                 onClick={() => {
-                  handlePomodoro(todo.name);
+                  handlePomodoro(todo);
                 }}
                 className={`${toggleCheckbox && isChecked} pl-2 cursor-pointer`}
               />

@@ -1,13 +1,94 @@
-/* prettier-ignore */
-import React, {useState} from "react"
+import { React, useState, useEffect } from "react";
 import Modal from "react-modal";
 import GridLayout from "./components/GridLayout";
-import Pomodoro from "./components/Pomodoro"
+import Pomodoro from "./components/Pomodoro";
+import supabase from "./components/supabase";
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
-  const [ isOpenModal, setIsOpenModal ] = useState(false)
-  const [ task, setTask ] = useState('')
-  const [ pomodoroCount, setPomodoroCount ] = useState(0)
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [todo, setTodo] = useState(null);
+  const [pomodoroCount, setPomodoroCount] = useState(0);
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    if (todos.length === 0) {
+      getTodosFromSupabase();
+    }
+  }, []);
+
+  useEffect(() => {
+    loadTodosToSupabase();
+    console.log(todos)
+  }, [todos]);
+
+  const handleError = (e) => {
+    if (e) {
+      console.error("Error fetching data from Supabase:", e);
+      return true;
+    }
+    return false;
+  };
+
+  const getTodosFromSupabase = async () => {
+    const { data: todosFromSupabase, error } = await supabase
+      .from("todos")
+      .select()
+      .order("id", { ascending: true });
+    if (!handleError(error)) {
+      loadTodosFromSupabase(todosFromSupabase);
+    }
+  };
+
+  const checkExistingTodoInSupabase = async (todo) => {
+    const { data: existingTodos, error } = await supabase
+      .from("todos")
+      .select("id")
+      .eq("task_name", todo.name)
+    if (error) {
+      console.error("Error fetching existing todos from Supabase:", error);
+      return false;
+    }
+    if (existingTodos.length > 0) {
+      const isExistingTodo = existingTodos.some(
+        (existingTodo) => existingTodo.id === todo.id
+      );
+      if (isExistingTodo) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const loadTodosFromSupabase = (todosFromSupabase) => {
+    if (todosFromSupabase) {
+      setTodos(
+        todosFromSupabase.map((todo) => {
+          return {
+            id: todo.id,
+            name: todo.task_name,
+            pomodoro: 0,
+          };
+        })
+      );
+    }
+  };
+
+  const loadTodosToSupabase = async () => {
+    todos.map(async (todo) => {
+      if (await checkExistingTodoInSupabase(todo)) return;
+      let now = new Date();
+      let newTodo = {
+        id: uuidv4(),
+        created_at: now,
+        task_name: todo.name,
+        pomodoros: todo.pomodoro
+      };
+      const { resp, err } = await supabase.from("todos").insert([newTodo]);
+      if (handleError(err)) return;
+      console.log(resp);
+    });
+  };
 
   const customModalStyles = {
     overlay: {
@@ -32,18 +113,47 @@ function App() {
     },
   };
 
-  const showModal = (name) => {
-    setTask(name)
-    setIsOpenModal(true)
-  }
+  const startPomodoro = (todo) => {
+    setTodo(todo);
+    setIsOpenModal(true);
+  };
 
-  const closeModal = () => {
-    setIsOpenModal(false)
-  }
+  const closeModal = (todo) => {
+    setIsOpenModal(false);
+    addPomodoroToTodo(todo);
+    setPomodoroCount(0);
+  };
+
+  const addPomodoroToTodo = (todo) => {
+    // Find the index of the todo in the todos array
+    const todoIndex = todos.findIndex((item) => item.id === todo.id);
+
+    // Check if the todo is found in the todos array
+    if (todoIndex !== -1) {
+      // Create a shallow copy of the todos array
+      const updatedTodos = [...todos];
+
+      // Update the pomodoro count for the specific todo
+      updatedTodos[todoIndex] = {
+        ...updatedTodos[todoIndex],
+        pomodoro: todo.pomodoro + pomodoroCount, // Increment the pomodoro count by 1
+      };
+
+      // Update the state with the modified todos array
+      setTodos(updatedTodos);
+    }
+  };
 
   return (
     <div className="h-screen">
-      <GridLayout showModal={showModal}/>
+      <GridLayout
+        startPomodoro={startPomodoro}
+        todos={todos}
+        setTodos={setTodos}
+        pomodoroCount={pomodoroCount}
+        setPomodoroCount={pomodoroCount}
+        handleError={handleError}
+      />
       <Modal
         isOpen={isOpenModal}
         onRequestClose={closeModal}
@@ -51,9 +161,13 @@ function App() {
         contentLabel="Pomodoro Modal"
         ariaHideApp={false}
       >
-        <Pomodoro task={task} closeModal={closeModal} count={pomodoroCount} setCount={setPomodoroCount}/>
+        <Pomodoro
+          todo={todo}
+          closeModal={closeModal}
+          pomodoroCount={pomodoroCount}
+          setPomodoroCount={setPomodoroCount}
+        />
       </Modal>
-      
     </div>
   );
 }

@@ -1,8 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import auth from "./auth";
 import supabase from "./supabase";
-import { v4 as uuidv4 } from 'uuid';
-
 import GridItem from "./GridItem";
 import MainGrid from "./MainGrid";
 import Todos from "./Todos";
@@ -10,15 +7,11 @@ import MainInput from "./MainInput";
 import RenderAreaCharts from "./RenderAreaCharts";
 import PromptDisplay from "./PromptDisplay";
 
-
-
-const GridLayout = ({ showModal }) => {
-  const goalsFromStorage = JSON.parse(localStorage.getItem("goals"));
+const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, setTodos, handleError }) => {
   const hTagRefs = useRef([]);
   const [displayText, setDisplayText] = useState("");
   const [mainInput, setMainInput] = useState("");
-  const [todos, setTodos] = useState([]);
-  const [goals, setGoals] = useState(goalsFromStorage || []);
+  const [goals, setGoals] = useState([]);
   const [editGoalsMode, setEditGoalsMode] = useState([false, 0]);
   const [isChecked, setIsChecked] = useState({});
 
@@ -26,9 +19,6 @@ const GridLayout = ({ showModal }) => {
 
   useEffect(() => {
     getGoalsFromSupabase();
-    if (todos.length === 0) {
-      getTodosFromSupabase();
-    }
 
     // Try to understand code!
     hTagRefs.current.forEach((ref, index) => {
@@ -45,86 +35,12 @@ const GridLayout = ({ showModal }) => {
     insertGoalsToSupabase();
   }, [goals]);
 
-  useEffect(() => {
-    insertTodosToSupabase();
-  }, [todos]);
-
   const toggleIsChecked = (id) => {
     setIsChecked((prevState) => ({
       ...prevState,
       [id]: !prevState[id],
     }))
   }
-
-  const handleError = (e) => {
-    if (e) {
-      console.error("Error fetching data from Supabase:", e);
-      return true;
-    }
-    return false;
-  };
-
-  const loadTodosFromSupabase = (todosFromSupabase) => {
-    setTodos([
-      ...todos,
-      ...todosFromSupabase.map((todo) => ({
-        id: todo.id,
-        name: todo.task_name,
-      })),
-    ]);
-  };
-
-  const checkExistingTodoInSupabase = async (todo) => {
-    const { data: existingTodos, error } = await supabase
-      .from("todos")
-      .select("id")
-      .eq("task_name", todo.name);
-  
-    if (error) {
-      console.error("Error fetching existing todos from Supabase:", error);
-      return false;
-    }
-  
-    if (existingTodos.length > 0) {
-      // Check if any of the existing todos have the same ID as the current todo
-      const isExistingTodo = existingTodos.some(
-        (existingTodo) => existingTodo.id === todo.id
-      );
-  
-      if (isExistingTodo) {
-        // console.log(`Todo ${todo.id} exists already in the database`);
-        return true;
-      }
-    }
-  
-    return false;
-  };
-
-  const insertTodosToSupabase = async () => {
-    todos.map(async (todo) => {
-      if (await checkExistingTodoInSupabase(todo)) return;
-      let now = new Date();
-      let newTodo = {
-        id: uuidv4(),
-        created_at: now,
-        task_name: todo.name
-      }
-      const { resp, err } = await supabase.from("todos").insert([newTodo]);
-      if (handleError(err)) return 
-      console.log(resp);
-    })
-    
-  }
-
-  const getTodosFromSupabase = async () => {
-    const { data: todosFromSupabase, error } = await supabase
-      .from("todos")
-      .select()
-      .order("id", { ascending: true });
-    if (!handleError(error)) {
-      loadTodosFromSupabase(todosFromSupabase);
-    }
-  };
 
   const getGoalsFromSupabase = async () => {
     const { data: goalsFromSupabase, error } = await supabase
@@ -137,37 +53,6 @@ const GridLayout = ({ showModal }) => {
       // Update the state variable to indicate that data is fetched
       loadGoalsFromSupabase(goalsFromSupabase);
     }
-  };
-
-  const loadGoalsFromSupabase = (goalsFromSupabase) => {
-    setGoals(goalsFromSupabase);
-  };
-
-  const insertGoalsToSupabase = async () => {
-    goals.map(async (goal) => {
-      let now = new Date().getDate();
-      if (checkExistingGoalInSupabase(goal)) return;
-      const newGoal = {
-        id: goal.id,
-        created_at: now,
-        deadline: "Tomorrow",
-        question: goal.question,
-        input: goal.input,
-        font: goal.font,
-      };
-      const { resp, err } = await supabase.from("goals").insert([newGoal]);
-      if (err) throw err;
-      else console.log(resp);
-    });
-  };
-
-  const getFormattedDate = () => {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth(); // Months are zero-based (0 to 11)
-    const currentDay = currentDate.getDate();
-    const actualMonth = currentMonth + 1;
-    return `${currentYear}-${actualMonth}-${currentDay}`;
   };
 
   const updateGoalsAtSupabase = async (id) => {
@@ -205,7 +90,6 @@ const GridLayout = ({ showModal }) => {
       .eq("question", goal.question)
       .eq("input", goal.input)
       .eq("font", goal.font);
-
     if (existingGoals.length > 0) {
       console.log(`Goal ${goal} exists already in database`);
       return true;
@@ -223,6 +107,56 @@ const GridLayout = ({ showModal }) => {
     displayEditGoalQuestion(id);
   };
 
+  const loadGoalsFromSupabase = (goalsFromSupabase) => {
+    setGoals(goalsFromSupabase);
+  };
+
+  const insertGoalsToSupabase = async () => {
+    goals.map(async (goal) => {
+      let now = new Date().getDate();
+      if (checkExistingGoalInSupabase(goal)) return;
+      const newGoal = {
+        id: goal.id,
+        created_at: now,
+        deadline: "Tomorrow",
+        question: goal.question,
+        input: goal.input,
+        font: goal.font,
+      };
+      const { resp, err } = await supabase.from("goals").insert([newGoal]);
+      if (err) throw err;
+      else console.log(resp);
+    });
+  };
+
+  const getFormattedDate = () => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth(); // Months are zero-based (0 to 11)
+    const currentDay = currentDate.getDate();
+    const actualMonth = currentMonth + 1;
+    return `${currentYear}-${actualMonth}-${currentDay}`;
+  };
+  
+  const editTodoInSupabase = async (id, taskName) => {
+    const { data, error } = await supabase
+      .from('todos')
+      .update({ task_name: taskName })
+      .eq('id', id)
+    if (handleError(error)) return
+    console.log(`todo ${id} is updated successfully`)
+  }
+
+  const deleteTodoFromSupabase = async (id) => {
+    const { data: todosFromSupabase, error } = await supabase
+      .from("todos")
+      .delete()
+      .eq("id", id)
+    if (!handleError(error)) {
+      console.log(`Successfully deleted todo: ${id}`)
+    }
+  }
+
   const handleEditTodo = (id, updatedName) => {
     const updatedTodos = todos.map((todo) => {
       if (todo.id === id) {
@@ -230,11 +164,13 @@ const GridLayout = ({ showModal }) => {
       }
       return todo;
     });
+    editTodoInSupabase(id, updatedName)
     setTodos(updatedTodos);
   };
 
   const handleDeleteTodo = (id) => {
     const updatedTodos = todos.filter((todo) => todo.id != id);
+    deleteTodoFromSupabase(id);
     setTodos(updatedTodos);
   };
 
@@ -271,7 +207,6 @@ const GridLayout = ({ showModal }) => {
               setGoals={setGoals}
               editMode={editGoalsMode}
             />
-
             <MainInput
               todos={todos}
               setTodos={setTodos}
@@ -284,19 +219,18 @@ const GridLayout = ({ showModal }) => {
               setIsChecked={setIsChecked}
               supabase={supabase}
             />
-
             <Todos
               todos={todos}
               onEditTodo={handleEditTodo}
               onDeleteTodo={handleDeleteTodo}
-              startPomodoro={showModal}
+              startPomodoro={startPomodoro}
             />
           </div>
         </div>
       </MainGrid>
 
       <GridItem key={98} title="Stats" gridProps={"row-start-2 row-span-3"}>
-        <RenderAreaCharts />
+        <RenderAreaCharts pomodoroCount={pomodoroCount} setPomodoroCount={setPomodoroCount}/>
       </GridItem>
     </div>
   );

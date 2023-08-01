@@ -4,7 +4,7 @@ import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Pomodoro = ({ closeModal, task }) => {
+const Pomodoro = ({ todo, closeModal, pomodoroCount, setPomodoroCount }) => {
   // Pomodoro is a studying technique that consists of 25 minutes of work followed by 5 minute rest, after 4 sets of work periods, there is a 15 minute long rest.
 
   library.add(faCircleCheck);
@@ -14,55 +14,11 @@ const Pomodoro = ({ closeModal, task }) => {
     testLongBreakDuration = 4,
     testPomodoroDuration = 5;
 
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isPomodoro, setIsPomodoro] = useState(true);
-  const [isBreak, setIsBreak] = useState(false);
-  const [isLongBreak, setIsLongBreak] = useState(false);
-  const [pomodoroCount, setPomodoroCount] = useState(1);
-
-  const renderTime = ({ remainingTime }) => {
-    return (
-      <div className="time-wrapper">
-        <div className="time text-4xl">{`${formatRenderTimeMinutes(
-          remainingTime
-        )}:${formatRenderTimeSeconds(remainingTime)}`}</div>
-      </div>
-    );
-  };
-
-  const renderCheckPomodoro = () => {
-    return (
-      <>
-        {isPomodoro && (
-          <h1 className="text-center text-5xl font-bold">{task} 💪</h1>
-        )}
-      </>
-    );
-  };
-
-  const renderCheckShortBreak = () => {
-    return (
-      <>
-        {isBreak && (
-          <h1 className="text-center text-5xl font-bold">
-            Short 5 Minute Break
-          </h1>
-        )}
-      </>
-    );
-  };
-
-  const renderCheckLongBreak = () => {
-    return (
-      <>
-        {isLongBreak && (
-          <h1 className="text-center text-5xl font-bold">
-            Long 15 Minute Break
-          </h1>
-        )}
-      </>
-    );
-  };
+  const [ isPlaying, setIsPlaying ] = useState(true);
+  const [ isPomodoro, setIsPomodoro ] = useState(true);
+  const [ isBreak, setIsBreak ] = useState(false);
+  const [ isLongBreak, setIsLongBreak ] = useState(false);
+  
 
   const formatRenderTimeMinutes = (timeForFormat) => {
     const minutes = Math.floor(timeForFormat / 60);
@@ -101,11 +57,59 @@ const Pomodoro = ({ closeModal, task }) => {
     setIsPomodoro(false);
   };
 
+  const renderTime = ({ remainingTime }) => {
+    return (
+      <div className="time-wrapper">
+        <div className="time text-4xl">{`${formatRenderTimeMinutes(
+          remainingTime
+        )}:${formatRenderTimeSeconds(remainingTime)}`}</div>
+      </div>
+    );
+  };
+
+  const renderCheckPomodoro = () => {
+    return (
+      <header>
+        {isPomodoro && (
+          <div className="todo">
+            <h1 className="text-center text-5xl font-bold">{todo.name} 💪</h1>
+            <p className="todo__id">{todo.id}</p>
+          </div>
+          
+        )}
+      </header>
+    );
+  };
+
+  const renderCheckShortBreak = () => {
+    return (
+      <header>
+        {isBreak && (
+          <h1 className="text-center text-5xl font-bold">
+            Short 5 Minute Break
+          </h1>
+        )}
+      </header>
+    );
+  };
+
+  const renderCheckLongBreak = () => {
+    return (
+      <header>
+        {isLongBreak && (
+          <h1 className="text-center text-5xl font-bold">
+            Long 15 Minute Break
+          </h1>
+        )}
+      </header>
+    );
+  };
+
   return (
     <>
       <div className="h-full min-h-max  w-full flex-col rounded-2xl bg-green-700 p-3 text-white">
         <div className="flex w-full justify-end">
-          <button className="" onClick={closeModal}>
+          <button className="" onClick={() => closeModal(todo)}>
             <img
               className="h-5 w-5 invert filter"
               src="/assets/images/close.png"

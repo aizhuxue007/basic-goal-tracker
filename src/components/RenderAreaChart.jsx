@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  ResponsiveContainer
-} from "recharts";
+import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
 const RenderAreaChart = ({}) => {
   const data = [
@@ -18,15 +12,22 @@ const RenderAreaChart = ({}) => {
     { day: "Sat", pomodoros: 7 },
   ];
   return (
-    <ResponsiveContainer width="90%">
-      <AreaChart width={200} height={100} data={data} 
-      margin={{top: 0, right: 50, bottom: 0, left: -30}}>
-        <Area type="monotone" dataKey="pomodoros" stroke="#065535" fill="#065535"
-        />
-        <XAxis dataKey="day" />
-        <YAxis />
-      </AreaChart>
-    </ResponsiveContainer>
+    
+    <AreaChart
+      width={210}
+      height={180}
+      data={data}
+      margin={{ top: 0, right: 50, bottom: 0, left: -30 }}
+    >
+      <Area
+        type="monotone"
+        dataKey="pomodoros"
+        stroke="#065535"
+        fill="#065535"
+      />
+      <XAxis dataKey="day" />
+      <YAxis />
+    </AreaChart>
   );
 };
 export default RenderAreaChart;
