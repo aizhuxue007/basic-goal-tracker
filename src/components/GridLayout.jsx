@@ -9,11 +9,11 @@ import PromptDisplay from "./PromptDisplay";
 
 const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, setTodos, handleError }) => {
   const hTagRefs = useRef([]);
-  const [displayText, setDisplayText] = useState("");
-  const [mainInput, setMainInput] = useState("");
-  const [goals, setGoals] = useState([]);
-  const [editGoalsMode, setEditGoalsMode] = useState([false, 0]);
-  const [isChecked, setIsChecked] = useState({});
+  const [ displayText, setDisplayText ] = useState("");
+  const [ mainInput, setMainInput ] = useState("");
+  const [ goals, setGoals ] = useState([]);
+  const [ editGoalsMode, setEditGoalsMode ] = useState([false, 0]);
+  const [ isChecked, setIsChecked ] = useState({});
 
   let goalsToRender = goals;
 
@@ -27,7 +27,7 @@ const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, set
       }
     });
 
-    // updateGoalsAtSupabase(99);
+    // updateGoalAtSupabase(2);
     // deleteGoalsRowInSupabase(99)
   }, []);
 
@@ -55,19 +55,10 @@ const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, set
     }
   };
 
-  const updateGoalsAtSupabase = async (id) => {
-    let now = getFormattedDate();
-    const newValue = {
-      created_at: now,
-      deadline: "right now",
-      question: "just changed it",
-      input: "now wait!",
-      font: false,
-      time: null,
-    };
+  const updateGoalAtSupabase = async (id, updatedGoal) => {
     const { data, error } = await supabase
       .from("goals")
-      .update(newValue)
+      .update(updatedGoal)
       .eq("id", id);
     if (error) {
       console.log("Error updated row", id, error.message);
@@ -100,7 +91,7 @@ const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, set
   const displayEditGoalQuestion = (id) => {
     let targetGoal = goals.find((goal) => goal.id === id);
     setDisplayText(targetGoal.question);
-    setEditGoalsMode([true, id]);
+    setEditGoalsMode([ true, id ]);
   };
 
   const updateGoals = (id) => {
@@ -118,7 +109,7 @@ const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, set
       const newGoal = {
         id: goal.id,
         created_at: now,
-        deadline: "Tomorrow",
+        deadline: new Date(),
         question: goal.question,
         input: goal.input,
         font: goal.font,
@@ -127,15 +118,6 @@ const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, set
       if (err) throw err;
       else console.log(resp);
     });
-  };
-
-  const getFormattedDate = () => {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth(); // Months are zero-based (0 to 11)
-    const currentDay = currentDate.getDate();
-    const actualMonth = currentMonth + 1;
-    return `${currentYear}-${actualMonth}-${currentDay}`;
   };
   
   const editTodoInSupabase = async (id, taskName) => {
@@ -218,6 +200,7 @@ const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, set
               setEditGoalsMode={setEditGoalsMode}
               setIsChecked={setIsChecked}
               supabase={supabase}
+              updateGoalAtSupabase={updateGoalAtSupabase}
             />
             <Todos
               todos={todos}

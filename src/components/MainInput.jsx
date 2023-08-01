@@ -10,7 +10,8 @@ const MainInput = ({
   editGoalsMode,
   setEditGoalsMode,
   setIsChecked,
-  supabase
+  supabase,
+  updateGoalAtSupabase
 }) => {
   const todoInput = useRef(null);
 
@@ -31,6 +32,20 @@ const MainInput = ({
       }
     }
   };
+  
+  const constructUpdatedGoal = (id, input) => {
+    let now = new Date().toISOString().split('T')[0]
+    let updatedGoal
+    return updatedGoal = {
+      id: id,
+      created_at: now,
+      deadline: 'Tomorrow',
+      question: 'Based on my ONE YEAR goal, what is my MONTHLY goal?',
+      input: input,
+      font: false,
+      time: 'MONTHLY'
+    }
+  }
 
   const editGoalsInput = (id) => {
     setGoals((prevGoals) =>
@@ -38,6 +53,8 @@ const MainInput = ({
         goal.id === id ? { ...goal, input: mainInput} : goal
       )
     );
+    const updatedGoal = constructUpdatedGoal(id, mainInput)
+    updateGoalAtSupabase(id, updatedGoal) 
   }
 
   const addNewTodo = () => {
