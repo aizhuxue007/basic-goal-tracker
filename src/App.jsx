@@ -19,7 +19,6 @@ function App() {
 
   useEffect(() => {
     loadTodosToSupabase();
-    console.log(todos)
   }, [todos]);
 
   const handleError = (e) => {

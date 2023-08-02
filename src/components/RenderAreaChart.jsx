@@ -1,18 +1,9 @@
 import React from "react";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
-const RenderAreaChart = ({}) => {
-  const data = [
-    { day: "Sun", pomodoros: 1 },
-    { day: "Mon", pomodoros: 12 },
-    { day: "Tues", pomodoros: 4 },
-    { day: "Wed", pomodoros: 0 },
-    { day: "Thurs", pomodoros: 15 },
-    { day: "Fri", pomodoros: 9 },
-    { day: "Sat", pomodoros: 7 },
-  ];
+const RenderAreaChart = ({data}) => {
   return (
-    
+
     <AreaChart
       width={210}
       height={180}
