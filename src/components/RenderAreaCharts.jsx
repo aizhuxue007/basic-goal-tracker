@@ -2,8 +2,13 @@ import React, { useEffect } from "react";
 import RenderAreaChart from "./RenderAreaChart";
 
 const RenderAreaCharts = ({ pomodoroCount, setPomodoroCount }) => {
+  let totalPomodoroCount = 0;
+  let now = new Date()
+
   useEffect(() => {
-    console.log('pomodoro count ', pomodoroCount)
+    totalPomodoroCount += pomodoroCount
+    console.log(totalPomodoroCount)
+    console.log(now)
   }, [pomodoroCount])
 
   return (
