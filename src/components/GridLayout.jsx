@@ -7,13 +7,20 @@ import MainInput from "./MainInput";
 import RenderAreaCharts from "./RenderAreaCharts";
 import PromptDisplay from "./PromptDisplay";
 
-const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, setTodos, handleError }) => {
+const GridLayout = ({
+  startPomodoro,
+  pomodoroCount,
+  setPomodoroCount,
+  todos,
+  setTodos,
+  handleError,
+}) => {
   const hTagRefs = useRef([]);
-  const [ displayText, setDisplayText ] = useState("");
-  const [ mainInput, setMainInput ] = useState("");
-  const [ goals, setGoals ] = useState([]);
-  const [ editGoalsMode, setEditGoalsMode ] = useState([false, 0]);
-  const [ isChecked, setIsChecked ] = useState({});
+  const [displayText, setDisplayText] = useState("");
+  const [mainInput, setMainInput] = useState("");
+  const [goals, setGoals] = useState([]);
+  const [editGoalsMode, setEditGoalsMode] = useState([false, 0]);
+  const [isChecked, setIsChecked] = useState({});
 
   let goalsToRender = goals;
 
@@ -39,8 +46,8 @@ const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, set
     setIsChecked((prevState) => ({
       ...prevState,
       [id]: !prevState[id],
-    }))
-  }
+    }));
+  };
 
   const getGoalsFromSupabase = async () => {
     const { data: goalsFromSupabase, error } = await supabase
@@ -91,7 +98,7 @@ const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, set
   const displayEditGoalQuestion = (id) => {
     let targetGoal = goals.find((goal) => goal.id === id);
     setDisplayText(targetGoal.question);
-    setEditGoalsMode([ true, id ]);
+    setEditGoalsMode([true, id]);
   };
 
   const updateGoals = (id) => {
@@ -119,25 +126,25 @@ const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, set
       else console.log(resp);
     });
   };
-  
+
   const editTodoInSupabase = async (id, taskName) => {
     const { data, error } = await supabase
-      .from('todos')
+      .from("todos")
       .update({ task_name: taskName })
-      .eq('id', id)
-    if (handleError(error)) return
-    console.log(`todo ${id} is updated successfully`)
-  }
+      .eq("id", id);
+    if (handleError(error)) return;
+    console.log(`todo ${id} is updated successfully`);
+  };
 
   const deleteTodoFromSupabase = async (id) => {
     const { data: todosFromSupabase, error } = await supabase
       .from("todos")
       .delete()
-      .eq("id", id)
+      .eq("id", id);
     if (!handleError(error)) {
-      console.log(`Successfully deleted todo: ${id}`)
+      console.log(`Successfully deleted todo: ${id}`);
     }
-  }
+  };
 
   const handleEditTodo = (id, updatedName) => {
     const updatedTodos = todos.map((todo) => {
@@ -146,7 +153,7 @@ const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, set
       }
       return todo;
     });
-    editTodoInSupabase(id, updatedName)
+    editTodoInSupabase(id, updatedName);
     setTodos(updatedTodos);
   };
 
@@ -213,7 +220,11 @@ const GridLayout = ({ startPomodoro, pomodoroCount, setPomodoroCount, todos, set
       </MainGrid>
 
       <GridItem key={98} title="Stats" gridProps={"row-start-2 row-span-3"}>
-        <RenderAreaCharts pomodoroCount={pomodoroCount} setPomodoroCount={setPomodoroCount}/>
+        <RenderAreaCharts
+          pomodoroCount={pomodoroCount}
+          setPomodoroCount={setPomodoroCount}
+          todos={todos}
+        />
       </GridItem>
     </div>
   );
