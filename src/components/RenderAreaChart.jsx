@@ -1,9 +1,8 @@
 import React from "react";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
-const RenderAreaChart = ({data}) => {
+const RenderAreaChart = ({ data }) => {
   return (
-
     <AreaChart
       width={210}
       height={180}
