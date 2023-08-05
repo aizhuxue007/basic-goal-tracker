@@ -67,7 +67,7 @@ function App() {
             id: todo.id,
             created_at: todo.created_at,
             name: todo.task_name,
-            pomodoro: 0,
+            pomodoro: todo.pomodoros,
           };
         })
       );
