@@ -2,7 +2,7 @@ import React from "react";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
 const RenderAreaChart = ({ todosData }) => {
-  // console.log(todosData)
+  console.log(todosData)
   return (
     <div>
       <AreaChart

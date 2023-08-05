@@ -15,7 +15,7 @@ const RenderAreaCharts = ({ pomodoroCount, setPomodoroCount, todos }) => {
       }
     })
     setTodosData(formattedTodos)
-  }, [])
+  }, [todos])
 
   let totalPomodoroCount = 0;
 
