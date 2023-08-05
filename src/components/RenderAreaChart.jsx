@@ -1,14 +1,14 @@
 import React from "react";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
-const RenderAreaChart = ({ data }) => {
-  // console.log(data)
+const RenderAreaChart = ({ todosData }) => {
+  // console.log(todosData)
   return (
     <div>
       <AreaChart
         width={210}
         height={180}
-        data={data}
+        data={todosData}
         margin={{ top: 0, right: 50, bottom: 0, left: -30 }}
       >
         <Area

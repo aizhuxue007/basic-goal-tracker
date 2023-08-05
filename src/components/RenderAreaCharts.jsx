@@ -1,34 +1,32 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import RenderAreaChart from "./RenderAreaChart";
 
 const RenderAreaCharts = ({ pomodoroCount, setPomodoroCount, todos }) => {
-  let totalPomodoroCount = 0;
-
-  let now = new Date().toISOString().split('T')[0]
-  let todosData
+  const [todosData, setTodosData] = useState([])
+  
   useEffect(() => {
-    todosData = todos.map(todo => {
-      console.log(todo)
+    const formattedTodos = todos.map(todo => {
+      // console.log(todo.created_at.split('T')[0])
       return {
         id: todo.id,
-        date: todo.created_at,
+        created_at: todo.created_at,
+        day: todo.created_at.split('T')[0],
         pomodoros: todo.pomodoro
       }
     })
-    console.log(todosData)
-
-    
+    setTodosData(formattedTodos)
   }, [])
+
+  let totalPomodoroCount = 0;
 
   useEffect(() => {
     totalPomodoroCount += pomodoroCount
-    console.log(totalPomodoroCount)
-
+    // console.log(totalPomodoroCount)
   }, [pomodoroCount])
 
   return (
     <div className="w-full">
-      <RenderAreaChart data={todosData} />
+      <RenderAreaChart todosData={todosData} />
     </div>
   );
 };
