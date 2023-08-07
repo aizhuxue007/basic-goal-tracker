@@ -57,7 +57,6 @@ const GridLayout = ({
     if (error) {
       console.error("Error fetching data from Supabase:", error);
     } else {
-      // Update the state variable to indicate that data is fetched
       loadGoalsFromSupabase(goalsFromSupabase);
     }
   };
@@ -128,7 +127,7 @@ const GridLayout = ({
   };
 
   const editTodoInSupabase = async (id, taskName) => {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("todos")
       .update({ task_name: taskName })
       .eq("id", id);
@@ -137,7 +136,7 @@ const GridLayout = ({
   };
 
   const deleteTodoFromSupabase = async (id) => {
-    const { data: todosFromSupabase, error } = await supabase
+    const { error } = await supabase
       .from("todos")
       .delete()
       .eq("id", id);
@@ -164,7 +163,7 @@ const GridLayout = ({
   };
 
   return (
-    <div className="h-screen grid grid-cols-4 grid-rows-4 justify-items-stretch items-stretch gap-1 p-1">
+    <div className=" grid grid-cols-4 grid-rows-4 justify-items-stretch items-stretch gap-1 p-1">
       {Array.isArray(goalsToRender) &&
         goalsToRender.map((goal, index) => (
           <div key={index}>
@@ -183,7 +182,7 @@ const GridLayout = ({
         ))}
 
       <MainGrid>
-        <div className="interactive w-full h-5/6 rounded-3xl bg-green-500 text-white p-3">
+        <div className="interactive w-full rounded-3xl bg-green-500 text-white p-3">
           <h1 className="right-now__title  text-2xl font-bold text-center">
             Things to Do Right Now
           </h1>

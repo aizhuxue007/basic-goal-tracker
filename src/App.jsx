@@ -82,11 +82,10 @@ function App() {
         id: uuidv4(),
         created_at: now,
         task_name: todo.name,
-        pomodoros: todo.pomodoro
+        pomodoros: todo.pomodoro ? todo.pomodoro : 0
       };
-      const { resp, err } = await supabase.from("todos").insert([newTodo]);
+      const { err } = await supabase.from("todos").insert([newTodo]);
       if (handleError(err)) return;
-      console.log(resp);
     });
   };
 
@@ -107,7 +106,6 @@ function App() {
       bottom: "auto",
       border: "none",
       width: "75vw",
-      height: "75vh",
       padding: "0",
       transform: "translate(-50%, -50%)",
     },
@@ -125,21 +123,13 @@ function App() {
   };
 
   const addPomodoroToTodo = (todo) => {
-    // Find the index of the todo in the todos array
     const todoIndex = todos.findIndex((item) => item.id === todo.id);
-
-    // Check if the todo is found in the todos array
     if (todoIndex !== -1) {
-      // Create a shallow copy of the todos array
       const updatedTodos = [...todos];
-
-      // Update the pomodoro count for the specific todo
       updatedTodos[todoIndex] = {
         ...updatedTodos[todoIndex],
         pomodoro: todo.pomodoro + pomodoroCount, // Increment the pomodoro count by 1
       };
-
-      // Update the state with the modified todos array
       setTodos(updatedTodos);
     }
   };

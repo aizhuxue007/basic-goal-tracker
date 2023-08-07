@@ -11,9 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
   let isChecked = `text-green-600 line-through`;
-
   const editTodoInput = useRef(null);
-
   const [toggleCheckbox, setToggleCheckbox] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(todo.name);
@@ -52,7 +50,7 @@ const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
     startPomodoro(todo);
   };
 
-  const capitalizedFirstLetterStr = (str) => {
+  const capFirstLetter = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
@@ -113,11 +111,10 @@ const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
                 />
               </div>
 
-              <p className={`${toggleCheckbox && isChecked}`}>
+              <p className={`${toggleCheckbox && isChecked} truncate`}>
                 {`${todo.name}`}
               </p>
-
-              <p className="ml-[2em]">{`pomodoros ${todo.pomodoro}`}</p>
+              <p className="ml-[2em]">{`pomodoros: ${todo.pomodoro}`}</p>
             </div>
             <div className="todo__icons flex items-center text-green-700">
               <FontAwesomeIcon

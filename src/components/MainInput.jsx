@@ -1,16 +1,14 @@
-import { React, useState, useRef, useEffect } from "react";
+import { React, useRef, useEffect } from "react";
 
 const MainInput = ({
   todos,
   setTodos,
   mainInput,
-  goals,
   setGoals,
   setMainInput,
   editGoalsMode,
   setEditGoalsMode,
   setIsChecked,
-  supabase,
   updateGoalAtSupabase
 }) => {
   const todoInput = useRef(null);
@@ -58,7 +56,7 @@ const MainInput = ({
   }
 
   const addNewTodo = () => {
-    const newTodo = { id: todos.length + 1, name: mainInput };
+    const newTodo = { id: todos.length + 1, name: mainInput, pomodoro: 0 };
     setTodos([...todos, newTodo]);
   };
 

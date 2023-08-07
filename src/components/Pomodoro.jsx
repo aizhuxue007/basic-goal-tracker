@@ -70,7 +70,6 @@ const Pomodoro = ({ todo, closeModal, pomodoroCount, setPomodoroCount }) => {
         {isPomodoro && (
           <div className="todo">
             <h1 className="text-center text-5xl font-bold">{todo.name} 💪</h1>
-            <p className="todo__id">{todo.id}</p>
           </div>
         )}
       </header>
@@ -102,7 +101,7 @@ const Pomodoro = ({ todo, closeModal, pomodoroCount, setPomodoroCount }) => {
   };
 
   return (
-    <div className="h-full min-h-max  w-full flex-col rounded-2xl bg-green-700 p-3 text-white">
+    <div className="min-h-max p-5 w-full flex-col rounded-2xl bg-green-700 p-3 text-white">
       <div className="flex w-full justify-end">
         <button className="" onClick={() => closeModal(todo)}>
           <img
