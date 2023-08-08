@@ -218,7 +218,7 @@ const GridLayout = ({
         </div>
       </MainGrid>
 
-      <GridItem key={98} title="Stats" gridProps={"row-start-2 row-span-3"}>
+      <GridItem key={98} title="Stats" gridProps={"row-start-2 row-span-3 sm:row-start-auto sm:row-span-auto"}>
         <RenderAreaCharts
           pomodoroCount={pomodoroCount}
           setPomodoroCount={setPomodoroCount}
