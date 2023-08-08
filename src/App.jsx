@@ -59,6 +59,10 @@ function App() {
     return false;
   };
 
+  const capFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
   const loadTodosFromSupabase = (todosFromSupabase) => {
     if (todosFromSupabase) {
       setTodos(
@@ -66,7 +70,7 @@ function App() {
           return {
             id: todo.id,
             created_at: todo.created_at,
-            name: todo.task_name,
+            name: capFirstLetter(todo.task_name),
             pomodoro: todo.pomodoros,
           };
         })

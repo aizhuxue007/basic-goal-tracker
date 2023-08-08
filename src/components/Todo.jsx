@@ -51,10 +51,6 @@ const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
     startPomodoro(todo);
   };
 
-  const capFirstLetter = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
-
   const handleDelete = (id) => {
     onDeleteTodo(todo.id);
   };
