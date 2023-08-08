@@ -12,7 +12,9 @@ function App() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
+    
     if (todos.length === 0) {
+      console.log('blah')
       getTodosFromSupabase();
     }
   }, []);
@@ -34,6 +36,7 @@ function App() {
       .from("todos")
       .select()
       .order("id", { ascending: true });
+    console.log('in here')
     if (!handleError(error)) {
       loadTodosFromSupabase(todosFromSupabase);
     }
@@ -67,6 +70,7 @@ function App() {
     if (todosFromSupabase) {
       setTodos(
         todosFromSupabase.map((todo) => {
+          console.log(`${capFirstLetter(todo.task_name)}`)
           return {
             id: todo.id,
             created_at: todo.created_at,
