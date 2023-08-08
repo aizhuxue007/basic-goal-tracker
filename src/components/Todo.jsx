@@ -8,6 +8,7 @@ import {
   faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import TomatoSVG from '../assets/tomato.svg'
 
 const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
   let isChecked = `text-green-600 line-through`;
@@ -111,10 +112,14 @@ const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
                 />
               </div>
 
-              <p className={`${toggleCheckbox && isChecked} truncate`}>
+              <p className={`${toggleCheckbox && isChecked}`}>
                 {`${todo.name}`}
               </p>
-              <p className="ml-[2em]">{`pomodoros: ${todo.pomodoro}`}</p>
+              <div className="pomodoro flex justify-end">
+                <img src={TomatoSVG} width="10%" alt="tomato" />
+                <p className="ml-[0.5em] mr-[0.9em]">{todo.pomodoro}</p>
+              </div>
+              
             </div>
             <div className="todo__icons flex items-center text-green-700">
               <FontAwesomeIcon
