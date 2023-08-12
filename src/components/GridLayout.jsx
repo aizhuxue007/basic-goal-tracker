@@ -1,4 +1,3 @@
-import { useState, useRef, useEffect } from "react";
 import supabase from "./supabase";
 import GridItem from "./GridItem";
 import MainGrid from "./MainGrid";
@@ -6,6 +5,7 @@ import Todos from "./Todos";
 import MainInput from "./MainInput";
 import RenderAreaCharts from "./RenderAreaCharts";
 import PromptDisplay from "./PromptDisplay";
+import { useState, useRef, useEffect } from "react";
 
 const GridLayout = ({
   startPomodoro,
