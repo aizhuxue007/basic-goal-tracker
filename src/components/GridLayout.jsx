@@ -1,4 +1,4 @@
-import supabase from "./supabase";
+import { supabase } from "./supabase";
 import GridItem from "./GridItem";
 import MainGrid from "./MainGrid";
 import Todos from "./Todos";
