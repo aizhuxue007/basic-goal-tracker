@@ -1,9 +1,10 @@
-import { v4 as uuidv4 } from "uuid";
 import Modal from "react-modal";
 import GridLayout from "./components/GridLayout";
 import Pomodoro from "./components/Pomodoro";
 import { supabase } from "./components/supabase";
+import { v4 as uuidv4 } from "uuid";
 import { React, useState, useEffect } from "react";
+
 
 function App() {
   const [isOpenModal, setIsOpenModal] = useState(false);

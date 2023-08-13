@@ -26,16 +26,11 @@ const GridLayout = ({
 
   useEffect(() => {
     getGoalsFromSupabase();
-
-    // Try to understand code!
     hTagRefs.current.forEach((ref, index) => {
       if (ref && ref.current) {
         ref.current.textContent = goals[index].input;
       }
     });
-
-    // updateGoalAtSupabase(2);
-    // deleteGoalsRowInSupabase(99)
   }, []);
 
   useEffect(() => {
@@ -108,18 +103,22 @@ const GridLayout = ({
     setGoals(goalsFromSupabase);
   };
 
+  const makeNewGoal = (goal, now) => {
+    return newGoal = {
+      id: goal.id,
+      created_at: now,
+      deadline: new Date(),
+      question: goal.question,
+      input: goal.input,
+      font: goal.font,
+    };
+  }
+
   const insertGoalsToSupabase = async () => {
     goals.map(async (goal) => {
       let now = new Date().getDate();
       if (checkExistingGoalInSupabase(goal)) return;
-      const newGoal = {
-        id: goal.id,
-        created_at: now,
-        deadline: new Date(),
-        question: goal.question,
-        input: goal.input,
-        font: goal.font,
-      };
+      let newGoal = makeNewGoal(goal, now)
       const { resp, err } = await supabase.from("goals").insert([newGoal]);
       if (err) throw err;
       else console.log(resp);
