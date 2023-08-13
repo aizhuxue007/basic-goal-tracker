@@ -7,10 +7,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['os', 'path.parse'],
   },
-  server: {
-    proxy: {
-      '/api': 'http://localhost:3000' // Change this to the address of your json-server
-    }
-  }
+
 })
 
