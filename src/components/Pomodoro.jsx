@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Pomodoro = ({ todo, closeModal, pomodoroCount, setPomodoroCount }) => {
-  library.add(faCircleCheck);
+  library.add(faCircleCheck, faXmark);
 
   let duration = 25 * 60,
     testBreakDuration = 3,
@@ -103,13 +103,12 @@ const Pomodoro = ({ todo, closeModal, pomodoroCount, setPomodoroCount }) => {
   return (
     <div className="min-h-max p-5 w-full flex-col rounded-2xl bg-green-700 p-3 text-white">
       <div className="flex w-full justify-end">
-        <button className="" onClick={() => closeModal(todo)}>
-          <img
-            className="h-5 w-5 invert filter"
-            src="/assets/images/close.png"
-            alt="close-button-image from flaticon"
-          />
-        </button>
+        <FontAwesomeIcon
+          icon={faXmark}
+          onClick={() => {
+            closeModal();
+          }}
+        />
       </div>
 
       {renderCheckPomodoro()}
