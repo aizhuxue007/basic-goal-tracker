@@ -32,18 +32,16 @@ function App() {
   };
 
 
-  // const fetchTodos = async () => {
-  //   const { data: todosFromSupabase, error } = await supabase
-  //     .from("todos")
-  //     .select()
-  //     .order("id", { ascending: true });
-  //   return todosFromSupabase
-  // }
-  const getTodosFromSupabase = async () => {
+  const fetchTodos = async () => {
     const { data: todosFromSupabase, error } = await supabase
       .from("todos")
       .select()
       .order("id", { ascending: true });
+    return todosFromSupabase
+  }
+
+  const getTodosFromSupabase = async () => {
+    const todosFromSupabase = await fetchTodos()
     if (!handleError(error)) {
       loadTodosFromSupabase(todosFromSupabase);
     }
