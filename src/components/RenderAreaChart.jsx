@@ -75,7 +75,7 @@ const RenderAreaChart = ({ todosData }) => {
 ]
 
   return (
-    <div>
+    <ResponsiveContainer>
       <AreaChart
         width={210}
         height={180}
@@ -91,7 +91,7 @@ const RenderAreaChart = ({ todosData }) => {
         <XAxis dataKey="day" />
         <YAxis />
       </AreaChart>
-    </div>
+      </ResponsiveContainer>
   );
 };
 export default RenderAreaChart;

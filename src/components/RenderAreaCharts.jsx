@@ -33,7 +33,7 @@ const RenderAreaCharts = ({ pomodoroCount, todos }) => {
   }, [pomodoroCount]);
 
   return (
-    <div className="w-full">
+    <div className="w-full py-2">
       <RenderAreaChart todosData={todosData} />
     </div>
   );

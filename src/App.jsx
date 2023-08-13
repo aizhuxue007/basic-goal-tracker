@@ -13,15 +13,10 @@ function App() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    
     if (todos.length === 0) {
-      console.log('blah')
       getTodosFromSupabase();
     }
-  }, []);
-
-  useEffect(() => {
-    loadTodosToSupabase();
+    loadTodosToSupabase()
   }, [todos]);
 
   const handleError = (e) => {
@@ -32,12 +27,23 @@ function App() {
     return false;
   };
 
+  const capFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+
+  // const fetchTodos = async () => {
+  //   const { data: todosFromSupabase, error } = await supabase
+  //     .from("todos")
+  //     .select()
+  //     .order("id", { ascending: true });
+  //   return todosFromSupabase
+  // }
   const getTodosFromSupabase = async () => {
     const { data: todosFromSupabase, error } = await supabase
       .from("todos")
       .select()
       .order("id", { ascending: true });
-    console.log('in here')
     if (!handleError(error)) {
       loadTodosFromSupabase(todosFromSupabase);
     }
@@ -63,15 +69,10 @@ function App() {
     return false;
   };
 
-  const capFirstLetter = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
-
   const loadTodosFromSupabase = (todosFromSupabase) => {
     if (todosFromSupabase) {
       setTodos(
         todosFromSupabase.map((todo) => {
-          console.log(`${capFirstLetter(todo.task_name)}`)
           return {
             id: todo.id,
             created_at: todo.created_at,
