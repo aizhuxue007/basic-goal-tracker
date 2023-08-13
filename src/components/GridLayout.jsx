@@ -162,11 +162,12 @@ const GridLayout = ({
   };
 
   return (
-    <div className=" grid grid-cols-4 grid-rows-4 justify-items-stretch items-stretch gap-1 p-1">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 grid-rows-4 justify-items-stretch items-stretch gap-1 p-1">
       {Array.isArray(goalsToRender) &&
         goalsToRender.map((goal, index) => (
-          <div key={index}>
+          
             <GridItem
+              key={index}
               goals={goals}
               goal={goal}
               updateGoals={updateGoals}
@@ -177,10 +178,10 @@ const GridLayout = ({
               setIsChecked={() => toggleIsChecked(goal.id)}
               hTagRef={(ref) => (hTagRefs.current[index] = ref)}
             />
-          </div>
+  
         ))}
 
-      <MainGrid>
+      <MainGrid className="md:col-span-3">
         <div className="interactive w-full rounded-3xl bg-green-500 text-white p-3">
           <h1 className="right-now__title  text-2xl font-bold text-center">
             Things to Do Right Now
@@ -217,7 +218,10 @@ const GridLayout = ({
         </div>
       </MainGrid>
 
-      <GridItem key={98} title="Stats" gridProps={"row-start-2 row-span-3 sm:row-start-auto sm:row-span-auto"}>
+      <GridItem 
+        key={98} 
+        title="Stats" 
+        gridProps={"md:row-start-2 md:row-span-3 row-start-3 row-span-2"}>
         <RenderAreaCharts
           pomodoroCount={pomodoroCount}
           setPomodoroCount={setPomodoroCount}

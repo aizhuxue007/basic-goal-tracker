@@ -40,8 +40,8 @@ const GridItem = ({
   };
 
   return (
-    <div className={`${gridClasses}`}>
-      <div className={`item-container rounded-3xl bg-green-500 p-5 text-white`}>
+
+      <div className={`item-container rounded-3xl bg-green-500 p-5 text-white ${gridClasses}`}>
         {goal ? (
           <>
             <h1 ref={hTagRef} className="text-2xl font-bold text-center">
@@ -95,7 +95,6 @@ const GridItem = ({
         )}
         {children}
       </div>
-    </div>
   );
 };
 
