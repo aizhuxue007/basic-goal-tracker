@@ -13,9 +13,11 @@ function App() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    if (todos.length === 0) {
-      getTodosFromSupabase();
-    }
+    getTodosFromSupabase();
+  }, [])
+
+  useEffect(() => {
+    
     loadTodosToSupabase()
   }, [todos]);
 
@@ -31,11 +33,6 @@ function App() {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
-
-  const fetchTodos = async () => {
-    
-  }
-
   const getTodosFromSupabase = async () => {
     const { data: todosFromSupabase, error } = await supabase
       .from("todos")
@@ -50,21 +47,16 @@ function App() {
     const { data: existingTodos, error } = await supabase
       .from("todos")
       .select("id")
-      .eq("task_name", todo.name)
+      .eq("id", todo.id);
+  
     if (error) {
       console.error("Error fetching existing todos from Supabase:", error);
       return false;
     }
-    if (existingTodos.length > 0) {
-      const isExistingTodo = existingTodos.some(
-        (existingTodo) => existingTodo.id === todo.id
-      );
-      if (isExistingTodo) {
-        return true;
-      }
-    }
-    return false;
+  
+    return existingTodos.length > 0;
   };
+  
 
   const loadTodosFromSupabase = (todosFromSupabase) => {
     if (todosFromSupabase) {
