@@ -17,7 +17,6 @@ function App() {
   }, [])
 
   useEffect(() => {
-    
     loadTodosToSupabase()
   }, [todos]);
 
