@@ -1,9 +1,11 @@
 import React from 'react'
+import RegisterForm from './RegisterForm'
+import PostForm from './PostForm'
 
 const SignInForm = () => {
   return (
-    <div className='w-full min-h-screen flex justify-center items-center'>
-      <form className="min-h-content  bg-green-500 p-40 rounded" action="POST">
+    <PostForm>
+     
         <h1 className='text-white text-center text-2xl font-semibold mb-10'>Log in</h1>
         <div className="flex flex-col gap-2">
           <label htmlFor="email" className='text-white'>Email</label>
@@ -20,9 +22,8 @@ const SignInForm = () => {
             Register
           </a>
         </div>
-      </form>
-    </div>
-
+     
+    </PostForm>
   )
 }
 

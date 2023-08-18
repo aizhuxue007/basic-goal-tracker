@@ -1,9 +1,11 @@
 import Modal from "react-modal";
 import GridLayout from "./components/GridLayout";
 import Pomodoro from "./components/Pomodoro";
+import NavBar from "./components/NavBar";
 import { supabase } from "./components/supabase";
 import { v4 as uuidv4 } from "uuid";
 import { React, useState, useEffect } from "react";
+
 
 
 function App() {
@@ -47,15 +49,15 @@ function App() {
       .from("todos")
       .select("id")
       .eq("id", todo.id);
-  
+
     if (error) {
       console.error("Error fetching existing todos from Supabase:", error);
       return false;
     }
-  
+
     return existingTodos.length > 0;
   };
-  
+
 
   const loadTodosFromSupabase = (todosFromSupabase) => {
     if (todosFromSupabase) {
@@ -134,14 +136,18 @@ function App() {
 
   return (
     <div className="h-screen">
-      <GridLayout
-        startPomodoro={startPomodoro}
-        todos={todos}
-        setTodos={setTodos}
-        pomodoroCount={pomodoroCount}
-        setPomodoroCount={pomodoroCount}
-        handleError={handleError}
-      />
+      <NavBar />
+      <div className="pt-20">
+        <GridLayout
+          startPomodoro={startPomodoro}
+          todos={todos}
+          setTodos={setTodos}
+          pomodoroCount={pomodoroCount}
+          setPomodoroCount={pomodoroCount}
+          handleError={handleError}
+        />
+      </div>
+
       <Modal
         isOpen={isOpenModal}
         onRequestClose={closeModal}
