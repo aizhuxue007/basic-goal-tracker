@@ -39,9 +39,11 @@ const Goals = () => {
       Input: "Continue on the CSS course and code along.",
     },
   ];
+
   const handleInputChange = () => {
     console.log("hello");
   };
+  
   return (
     <>
       <div className="container mx-auto pt-5 text-center font-sans subpixel-antialiased">
