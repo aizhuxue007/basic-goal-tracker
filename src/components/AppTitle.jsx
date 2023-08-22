@@ -7,8 +7,8 @@ const AppTitle = () => {
   library.add(faBullseye);
   
   return (
-    <div className="title-container flex h-1/6 w-full items-center justify-center bg-white p-3">
-      <div className="title text-5xl font-bold text-green-500">
+    <div className="title-container flex h-1/6 w-full items-center justify-center p-3">
+      <div className="title text-5xl font-bold text-white mb-2">
         FocusOne
         <FontAwesomeIcon icon={faBullseye} className="pl-2" />
       </div>

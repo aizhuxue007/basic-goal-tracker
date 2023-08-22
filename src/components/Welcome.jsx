@@ -2,7 +2,7 @@ import React from 'react'
 
 const Welcome = ({ user }) => {
   return (
-    <div>Welcome back, {user}</div>
+    <div class="flex items-center">Welcome back {user}!</div>
   )
 }
 

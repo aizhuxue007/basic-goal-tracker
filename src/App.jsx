@@ -137,7 +137,7 @@ function App() {
   return (
     <div className="h-screen">
       <NavBar />
-      <div className="pt-20">
+      <div className="">
         <GridLayout
           startPomodoro={startPomodoro}
           todos={todos}

@@ -1,15 +1,21 @@
 import React from 'react'
 import Welcome from './Welcome'
+import AppTitle from './AppTitle'
+import {useState} from 'react'
 
 const NavBar = () => {
+  const [user, setUser] = useState('Aizhu')
   return (
     <nav className='bg-green-700 p-5 sticky w-full text-white flex item-center justify-between'>
-        <h1><a href="/">LOGO</a></h1>
-        <Welcome />
-        <ul className=''>
-            <li><a href="">Profile</a></li>
-            <li><a href="">Logout</a></li>
-        </ul>
+        <a href="/" className='bg-green-700 flex items-center'>
+          <AppTitle />
+        </a>
+        <Welcome user={user}/>
+        <div className="link flex items-center">
+          <a className="align-middle" href="">Logout</a>
+        
+        </div>
+        
     </nav>
   )
 }

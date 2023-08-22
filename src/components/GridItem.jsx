@@ -64,7 +64,7 @@ const GridItem = ({
 
             <div className="goal-details w-full">
               <h2
-                className={`truncate mt-1 mb-10 text-xl font-light ${
+                className={`mt-1 mb-10 text-xl font-light ${
                   isChecked && checkedBoxClasses
                 } text-center`}
               >

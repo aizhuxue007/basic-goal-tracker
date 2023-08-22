@@ -162,7 +162,7 @@ const GridLayout = ({
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 grid-rows-4 justify-items-stretch items-stretch gap-1 p-1">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 grid-rows-4 justify-items-stretch items-stretch gap-1 p-2 pt-5">
       {Array.isArray(goalsToRender) &&
         goalsToRender.map((goal, index) => (
           
