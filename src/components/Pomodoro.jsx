@@ -35,8 +35,7 @@ const Pomodoro = ({ todo, closeModal, pomodoroCount, setPomodoroCount }) => {
 
   const incrementPomodoroCount = () => {
     setPomodoroCount((prevCount) => {
-      const newCount = prevCount + 1;
-      return newCount;
+      prevCount + 1;
     });
   };
 
@@ -106,6 +105,7 @@ const Pomodoro = ({ todo, closeModal, pomodoroCount, setPomodoroCount }) => {
         <FontAwesomeIcon
           icon={faXmark}
           onClick={() => {
+            incrementPomodoroCount();
             closeModal();
           }}
         />

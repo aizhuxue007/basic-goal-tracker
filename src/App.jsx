@@ -119,7 +119,6 @@ function App() {
   const closeModal = (todo) => {
     setIsOpenModal(false);
     addPomodoroToTodo(todo);
-    setPomodoroCount(0);
   };
 
   const addPomodoroToTodo = (todo) => {
@@ -143,7 +142,7 @@ function App() {
           todos={todos}
           setTodos={setTodos}
           pomodoroCount={pomodoroCount}
-          setPomodoroCount={pomodoroCount}
+          setPomodoroCount={setPomodoroCount}
           handleError={handleError}
         />
       </div>
