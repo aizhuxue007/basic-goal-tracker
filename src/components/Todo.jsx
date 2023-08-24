@@ -63,7 +63,7 @@ const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
 
   return (
     <>
-      <li className="todo flex items-center justify-between">
+      <li className="todo flex items-center justify-between h-full">
         {isEditing ? (
           <div className="w-full">
             <div className="todo__edit flex items-center w-full">
@@ -111,7 +111,7 @@ const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
               <p className={`${toggleCheckbox && isChecked}`}>
                 {`${todo.name}`}
               </p>
-              <div className="pomodoro flex justify-end">
+              <div className="pomodoro flex justify-end w-full h-full">
                 <img src={TomatoSVG} width="10%" alt="tomato" />
                 <p className="ml-[0.5em] mr-[0.9em]">{todo.pomodoro}</p>
               </div>
