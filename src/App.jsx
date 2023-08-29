@@ -10,7 +10,7 @@ import { React, useState, useEffect } from "react";
 
 function App() {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [todo, setTodo] = useState(null);
+  const [todo, setTodo] = useState([]);
   const [pomodoroCount, setPomodoroCount] = useState(0);
   const [todos, setTodos] = useState([]);
 
@@ -20,7 +20,7 @@ function App() {
 
   useEffect(() => {
     loadTodosToSupabase()
-  }, [todos]);
+  }, [todos, todo]);
 
   const handleError = (e) => {
     if (e) {
@@ -156,6 +156,7 @@ function App() {
       >
         <Pomodoro
           todo={todo}
+          setTodo={setTodo}
           closeModal={closeModal}
           pomodoroCount={pomodoroCount}
           setPomodoroCount={setPomodoroCount}

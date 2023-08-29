@@ -111,7 +111,7 @@ const Todo = ({ todo, id, onEditTodo, onDeleteTodo, startPomodoro }) => {
               <p className={`${toggleCheckbox && isChecked}`}>
                 {`${todo.name}`}
               </p>
-              <div className="pomodoro flex justify-end w-full h-full">
+              <div className="pomodoro flex justify-end items-center w-full h-full mr-2">
                 <img src={TomatoSVG} width="10%" alt="tomato" />
                 <p className="ml-[0.5em] mr-[0.9em]">{todo.pomodoro}</p>
               </div>

@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { faCircleCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Pomodoro = ({ todo, closeModal, pomodoroCount, setPomodoroCount }) => {
+const Pomodoro = ({ todo, setTodo, closeModal }) => {
   library.add(faCircleCheck, faXmark);
-
+ 
   let duration = 25 * 60,
     testBreakDuration = 3,
     testLongBreakDuration = 4,
@@ -16,6 +16,10 @@ const Pomodoro = ({ todo, closeModal, pomodoroCount, setPomodoroCount }) => {
   const [isPomodoro, setIsPomodoro] = useState(true);
   const [isBreak, setIsBreak] = useState(false);
   const [isLongBreak, setIsLongBreak] = useState(false);
+
+  useEffect(() => {
+    incrementPomodoroCount();
+  }, [isPomodoro])
 
   const formatRenderTimeMinutes = (timeForFormat) => {
     const minutes = Math.floor(timeForFormat / 60);
@@ -34,14 +38,14 @@ const Pomodoro = ({ todo, closeModal, pomodoroCount, setPomodoroCount }) => {
   };
 
   const incrementPomodoroCount = () => {
-    setPomodoroCount((prevCount) => {
-      prevCount + 1;
-    });
+    setTodo(prevTodo => ({
+      ...prevTodo,
+      pomodoros: prevTodo.pomodoros + 1,
+    }));
   };
 
   const chooseWhichBreak = async () => {
     setIsPomodoro(false);
-    incrementPomodoroCount();
     pomodoroCount % 4 === 0 ? setIsLongBreak(true) : setIsBreak(true);
   };
 
@@ -162,7 +166,7 @@ const Pomodoro = ({ todo, closeModal, pomodoroCount, setPomodoroCount }) => {
       </div>
       <h1 className="text-center text-xl text-green-300 my-10">
         <FontAwesomeIcon icon={faCircleCheck} className="pl-2 mr-3" />
-        {`${pomodoroCount}`}
+        {`${todo.pomodoro}`}
       </h1>
 
       <div className="mt-10 flex justify-center space-x-10">
