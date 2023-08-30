@@ -13,7 +13,7 @@ const NavBar = () => {
         </a>
         <Welcome user={user}/>
         <div className="link flex items-center">
-          <a className="align-middle mr-3" href="/login">Logout</a>
+          <Link className="align-middle mr-3" to="/login">Logout</Link>
         
         </div>
     </nav>
