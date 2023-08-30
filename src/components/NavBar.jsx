@@ -2,6 +2,7 @@ import React from 'react'
 import Welcome from './Welcome'
 import AppTitle from './AppTitle'
 import {useState} from 'react'
+import { Link } from 'react-router-dom'
 
 const NavBar = () => {
   const [user, setUser] = useState('Aizhu')
@@ -12,10 +13,9 @@ const NavBar = () => {
         </a>
         <Welcome user={user}/>
         <div className="link flex items-center">
-          <a className="align-middle mr-3" href="">Logout</a>
+          <a className="align-middle mr-3" href="/login">Logout</a>
         
         </div>
-        
     </nav>
   )
 }

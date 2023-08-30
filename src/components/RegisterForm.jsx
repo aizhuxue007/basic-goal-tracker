@@ -4,7 +4,6 @@ import PostForm from './PostForm'
 const RegisterForm = () => {
   return (
     <PostForm>
-    
         <h1 className='text-white text-center text-2xl font-semibold mb-10'>Register</h1>
         <div className="flex flex-col gap-2">
           <label htmlFor="email" className='text-white'>Email</label>
