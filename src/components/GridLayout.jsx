@@ -177,6 +177,7 @@ const GridLayout = ({
               isChecked={isChecked[goal.id]}
               setIsChecked={() => toggleIsChecked(goal.id)}
               hTagRef={(ref) => (hTagRefs.current[index] = ref)}
+              supabase={supabase}
             />
   
         ))}

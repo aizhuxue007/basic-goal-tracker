@@ -144,6 +144,7 @@ function App() {
           pomodoroCount={pomodoroCount}
           setPomodoroCount={setPomodoroCount}
           handleError={handleError}
+          supabase={supabase}
         />
       </div>
 
